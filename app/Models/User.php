@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Spatie\Permission\Traits\HasRoles;
+
+class User extends Authenticatable
+{
+    use HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+
+    protected $hidden = [
+        'password',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
+        'remember_token',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'two_factor_confirmed_at' => 'datetime',
+        ];
+    }
+
+    /**
+     * 👑 أول مستخدم = Admin تلقائياً
+     */
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            if (self::count() === 1) {
+                // تأكد أن الدور موجود
+                if (!\Spatie\Permission\Models\Role::where('name', 'admin')->exists()) {
+                    \Spatie\Permission\Models\Role::create(['name' => 'admin']);
+                }
+
+                $user->assignRole('admin');
+            }
+        });
+    }
+}
