@@ -3,12 +3,12 @@ return [
 
     'pdf' => [
         'enabled' => true,
-        'binary' => '/usr/local/bin/wkhtmltopdf',
+        'binary' => env('WKHTMLTOPDF_BINARY', '/usr/bin/wkhtmltopdf'),
         'timeout' => false,
         'options' => [
             'encoding' => 'UTF-8',
             'page-size' => 'A4',
-            'orientation' => 'Landscape',
+            'orientation' => 'portrait',
             'enable-local-file-access' => true,
         ],
         'env' => [],
@@ -16,10 +16,10 @@ return [
 
     'image' => [
         'enabled' => true,
-        'binary' => '/usr/local/bin/wkhtmltopdf',
+        'binary' => env('WKHTMLTOPDF_BINARY', '/usr/bin/wkhtmltoimage'),
         'timeout' => false,
         'options' => [],
-        'env'     => [],
+        'env' => [],
     ],
 
 ];
