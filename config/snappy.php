@@ -3,7 +3,7 @@ return [
 
     'pdf' => [
         'enabled' => true,
-'binary' => '"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"',
+        'binary' => '/usr/local/bin/wkhtmltopdf',
         'timeout' => false,
         'options' => [
             'encoding' => 'UTF-8',
@@ -16,7 +16,7 @@ return [
 
     'image' => [
         'enabled' => true,
-'binary' => '"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"',
+        'binary' => '/usr/local/bin/wkhtmltopdf',
         'timeout' => false,
         'options' => [],
         'env'     => [],
