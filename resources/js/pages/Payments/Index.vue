@@ -35,7 +35,6 @@ function paymentMethodLabel(method) {
 
 /* ===================== DELETE ===================== */
 
-const showMobileFilters = ref(false)
 
 const showDeleteModal = ref(false)
 const deleting = ref(false)
@@ -127,28 +126,18 @@ function formatMoney(value) {
     </div>
 
 
-
-
-<!-- زر الفلاتر (هاتف فقط) -->
-<button
-  class="md:hidden w-full mb-4 bg-green-600 text-white py-2 rounded-xl"
-  @click="showMobileFilters = !showMobileFilters"
->
-  🔍 فلترة
-</button>
-
-<div
-  :class="[
-    'bg-white rounded-2xl shadow p-5 mb-8',
-    showMobileFilters ? 'block' : 'hidden md:block'
-  ]"
->
 <!-- ================== الفلاتر ================== -->
 <div class="bg-white rounded-2xl shadow p-5 mb-8">
-  <div class="flex flex-wrap items-end gap-4 w-full">
+  <div  
+    class="
+      grid grid-cols-2 gap-x-4 gap-y-5
+      md:grid-cols-3
+      lg:grid-cols-6
+    "
+  >
 
     <!-- المشروع -->
-    <div class="min-w-[180px] flex-1">
+    <div class="col-span-2 lg:min-w-[180px] lg:flex-1">
       <label class="text-xs text-gray-500 mb-1 block">المشروع</label>
       <select v-model="filtersForm.project_id"
               class="w-full border rounded-xl px-3 py-2">
@@ -293,87 +282,11 @@ function formatMoney(value) {
 
   </div>
 </div>
-</div>
 
-<!-- ================= Mobile Cards ================= -->
-<div class="block md:hidden space-y-4">
 
-  <div
-    v-for="payment in payments.data"
-    :key="payment.id"
-    class="bg-white rounded-2xl shadow p-4"
-  >
-    <!-- المشروع -->
-    <div class="text-green-700 font-bold text-sm">
-      {{ payment.project?.name ?? '-' }}
-    </div>
-
-    <!-- النوع + الرقم -->
-    <div class="mt-1 text-sm text-gray-700">
-      {{ payment.context === 'land' ? 'قطعة' :
-         payment.context === 'apartment' ? 'شقة' : 'محل' }}
-      رقم
-      <span class="font-bold">
-        {{
-          payment.context === 'apartment'
-            ? payment.apartment?.number
-            : payment.context === 'shop'
-            ? payment.shop?.number
-            : payment.land?.land_number
-        }}
-      </span>
-    </div>
-
-    <!-- المبلغ -->
-    <div class="mt-2 text-green-600 font-bold text-lg">
-      {{ formatMoney(payment.amount) }} درهم
-    </div>
-
-    <!-- التاريخ + طريقة الدفع -->
-    <div class="mt-1 text-xs text-gray-500">
-      {{ formatDate(payment.paid_at) }} ·
-      {{ paymentMethodLabel(payment.payment_method) }}
-    </div>
-
-    <!-- الأزرار -->
-    <div class="mt-4 flex justify-between items-center">
-      <!-- طباعة -->
-      <a
-        :href="`/payments/${payment.id}/receipt`"
-        target="_blank"
-        class="p-2 text-green-600"
-      >
-        🖨️
-      </a>
-
-      <!-- تعديل -->
-      <button
-        @click="edit(payment.id)"
-        class="p-2 text-blue-600"
-      >
-        ✏️
-      </button>
-
-      <!-- حذف -->
-      <button
-        @click="confirmDelete(payment)"
-        class="p-2 text-red-600"
-      >
-        🗑️
-      </button>
-    </div>
-  </div>
-
-  <div
-    v-if="payments.data.length === 0"
-    class="text-center text-gray-400 py-10"
-  >
-    لا توجد دفوعات
-  </div>
-</div>
 
     <!-- ================== الجدول (نفس كودك) ================== -->
-    <div class="hidden md:block bg-white rounded-2xl shadow overflow-x-auto">
+    <div class="bg-white rounded-2xl shadow overflow-x-auto">
       <table class="w-full text-sm text-center">
         <thead class="bg-gray-50 text-gray-600">
           <tr>

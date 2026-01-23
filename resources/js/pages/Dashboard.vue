@@ -46,19 +46,22 @@ function formatMoney(value) {
     <!-- ================= العنوان ================= -->
     <div class="mb-6 text-right">
       <h1 class="text-3xl font-bold text-green-700">
-        الرئيسية
+        جليـــلي إخـــوان  
       </h1>
     </div>
 
 <!-- ================= بطاقة البحث (مطابقة customers) ================= -->
 <div class="bg-white rounded-2xl shadow p-5 mb-8">
-  <div class="flex flex-wrap items-end gap-4">
+  <div     class="
+      flex items-end gap-3
+      flex-nowrap
+      md:flex-wrap
+    "
+  >
 
     <!-- حقل البحث -->
-    <div class="flex-1 min-w-[300px]">
-      <label class="text-s font-bold text-gray-500 mb-1 block">
-        اسم الزبون أو رقم البطاقة الوطنية
-      </label>
+    <div class="flex-1 min-w-0">
+
 
       <input
         v-model="form.search"
@@ -120,9 +123,8 @@ function formatMoney(value) {
 </div>
 
     <!-- ================= الإحصائيات (نفس cards) ================= -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-
-      <div class="bg-white rounded-2xl shadow p-5">
+<div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+    <div class="bg-white rounded-2xl shadow p-5">
         <div class="text-s text-gray-500 mb-1 font-bold">الشركات</div>
         <div class="text-2xl font-bold">
           {{ stats.companies }}
@@ -145,10 +147,10 @@ function formatMoney(value) {
 
       <div class="bg-white rounded-2xl shadow p-5">
         <div class="text-s text-gray-500 mb-1 font-bold">
-          إجمالي دفوعات اليوم
+           دفوعات اليوم
         </div>
         <div class="text-2xl font-bold text-green-600">
-          {{ formatMoney(stats.payments_sum) }} DH
+          {{ formatMoney(stats.payments_sum) }} 
         </div>
       </div>
 

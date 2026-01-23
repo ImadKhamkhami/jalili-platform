@@ -172,8 +172,8 @@ function submit() {
 <div v-show="activeStep === 1" class="space-y-8">
   <h2 class="font-bold">معلومات الشقة</h2>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div>
+  <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+    <div class="col-span-2">
       <label class="font-semibold">المشروع</label>
       <select v-model="form.project_id" class="border rounded-xl p-3 w-full">
         <option value="">اختر</option>

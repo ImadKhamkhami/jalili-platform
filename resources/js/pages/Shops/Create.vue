@@ -94,18 +94,26 @@ function submit() {
 <div class="lg:col-span-3 space-y-6">
 
 <!-- ===== STEPPER ===== -->
-<div class="bg-white rounded-2xl shadow px-8 py-5 flex items-center gap-8">
-
-<button
-  type="button"
-  @click="activeStep = 1"
-  class="flex items-center gap-3 font-semibold min-w-[200px]"
-  :class="activeStep === 1 ? 'text-green-700' : 'text-gray-400'"
+<div
+  class="
+    bg-white rounded-2xl shadow
+    px-4 sm:px-8 py-4 sm:py-5
+    flex flex-col gap-4
+    sm:flex-row sm:items-center sm:gap-8
+  "
 >
-  <span
-    class="w-10 h-10 rounded-full flex items-center justify-center"
-    :class="activeStep === 1 ? 'bg-green-100' : 'bg-gray-100'"
+
+  <!-- STEP 1 -->
+  <button
+    type="button"
+    @click="activeStep = 1"
+    class="flex items-center gap-3 font-semibold w-full sm:w-auto"
+    :class="activeStep === 1 ? 'text-green-700' : 'text-gray-400'"
   >
+    <span
+      class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0"
+      :class="activeStep === 1 ? 'bg-green-100' : 'bg-gray-100'"
+    >
     <!-- أيقونة معلومات المحل -->
     <svg
       viewBox="0 0 24 24"
@@ -120,21 +128,27 @@ function submit() {
         d="M18.2685 13.5C19.0856 13.5 19.8448 13.2876 20.5 12.9189V14C20.5 17.7712 20.5 19.6568 19.3284 20.8284C18.3853 21.7715 16.9796 21.9554 14.5 21.9913V18.5C14.5 17.5654 14.5 17.0981 14.299 16.75C14.1674 16.522 13.978 16.3326 13.75 16.201C13.4019 16 12.9346 16 12 16C11.0654 16 10.5981 16 10.25 16.201C10.022 16.3326 9.83261 16.522 9.70096 16.75C9.5 17.0981 9.5 17.5654 9.5 18.5V21.9913C7.02043 21.9554 5.61466 21.7715 4.67157 20.8284C3.5 19.6568 3.5 17.7712 3.5 14V12.9189C4.15524 13.2876 4.91439 13.5 5.73157 13.5C6.92864 13.5 8.02617 13.0364 8.84435 12.2719C9.67168 13.0321 10.7765 13.5 11.9998 13.5C13.2232 13.5 14.3281 13.032 15.1555 12.2717C15.9737 13.0363 17.0713 13.5 18.2685 13.5Z"
       />
     </svg>
-  </span>
-  معلومات المحل
-</button>
+    </span>
 
-<!-- STEP 2 : MEZZANINE -->
-<button
-  type="button"
-  @click="activeStep = 2"
-  class="flex items-center gap-3 font-semibold min-w-[200px]"
-  :class="activeStep === 2 ? 'text-green-700' : 'text-gray-400'"
->
-  <span
-    class="w-10 h-10 rounded-full flex items-center justify-center"
-    :class="activeStep === 2 ? 'bg-green-100' : 'bg-gray-100'"
+    <span class="text-sm sm:text-base">
+      معلومات المحل
+    </span>
+  </button>
+
+  <!-- خط فاصل (يظهر فقط في الديسكتوب) -->
+  <div class="hidden sm:block flex-1 h-px bg-gray-200"></div>
+
+  <!-- STEP 2 -->
+  <button
+    type="button"
+    @click="activeStep = 2"
+    class="flex items-center gap-3 font-semibold w-full sm:w-auto"
+    :class="activeStep === 2 ? 'text-green-700' : 'text-gray-400'"
   >
+    <span
+      class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0"
+      :class="activeStep === 2 ? 'bg-green-100' : 'bg-gray-100'"
+    >
     <!-- أيقونة الميزانين -->
     <svg
       viewBox="0 0 512 512"
@@ -151,22 +165,33 @@ function submit() {
                 413.625,112.666 512,112.666 512,53.422"
       />
     </svg>
-  </span>
-  Mezzanine
-</button>
+    </span>
 
-<button
-  type="button"
-  @click="activeStep = 3"
-  class="flex items-center gap-3 font-semibold min-w-[200px]"
-  :class="activeStep === 3 ? 'text-green-700' : 'text-gray-400'"
->
-  <span class="w-10 h-10 rounded-full flex items-center justify-center"
-        :class="activeStep === 3 ? 'bg-green-100' : 'bg-gray-100'">
-    %
-  </span>
-  التخفيض
-</button>
+    <span class="text-sm sm:text-base">
+      Mezzanine
+    </span>
+  </button>
+
+  <div class="hidden sm:block flex-1 h-px bg-gray-200"></div>
+
+  <!-- STEP 3 -->
+  <button
+    type="button"
+    @click="activeStep = 3"
+    class="flex items-center gap-3 font-semibold w-full sm:w-auto"
+    :class="activeStep === 3 ? 'text-green-700' : 'text-gray-400'"
+  >
+    <span
+      class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0"
+      :class="activeStep === 3 ? 'bg-green-100' : 'bg-gray-100'"
+    >
+      %
+    </span>
+
+    <span class="text-sm sm:text-base">
+      التخفيض
+    </span>
+  </button>
 
 </div>
 
@@ -178,9 +203,9 @@ function submit() {
 
 <h2 class="font-bold">معلومات المحل</h2>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 
-<div>
+<div class="col-span-2">
   <label class="font-semibold">المشروع</label>
   <select v-model="form.project_id" class="border rounded-xl p-3 w-full">
     <option value="">اختر</option>

@@ -89,16 +89,23 @@ function submit() {
     <!-- ================= LEFT ================= -->
     <div class="lg:col-span-3 space-y-6">
 
-      <!-- ===== STEPPER ===== -->
-      <div class="bg-white rounded-2xl shadow px-8 py-5 flex items-center gap-8">
 
-
-<button
-  type="button"
-  @click="activeStep = 1"
-  class="flex items-center gap-3 font-semibold min-w-[200px]"
-  :class="activeStep === 1 ? 'text-green-700' : 'text-gray-400'"
+<!-- ===== STEPPER ===== -->
+<div
+  class="
+    bg-white rounded-2xl shadow
+    px-4 py-4
+    flex flex-col gap-4
+    sm:flex-row sm:items-center sm:gap-8
+  "
 >
+  <!-- STEP 1 -->
+  <button
+    type="button"
+    @click="activeStep = 1"
+    class="flex items-center gap-3 font-semibold w-full sm:w-auto"
+    :class="activeStep === 1 ? 'text-green-700' : 'text-gray-400'"
+  >
   <span
     class="w-10 h-10 rounded-full flex items-center justify-center"
     :class="activeStep === 1 ? 'bg-green-100' : 'bg-gray-100'"
@@ -109,18 +116,22 @@ function submit() {
     </svg>
   </span>
   معلومات القطعة
-</button>
+  </button>
 
-<button
-  type="button"
-  @click="activeStep = 2"
-  class="flex items-center gap-3 font-semibold min-w-[200px]"
-  :class="activeStep === 2 ? 'text-green-700' : 'text-gray-400'"
->
-  <span
-    class="w-10 h-10 rounded-full flex items-center justify-center"
-    :class="activeStep === 2 ? 'bg-green-100' : 'bg-gray-100'"
+  <!-- خط التقدم -->
+  <div class="hidden sm:block flex-1 h-px bg-gray-200"></div>
+
+  <!-- STEP 2 -->
+  <button
+    type="button"
+    @click="activeStep = 2"
+    class="flex items-center gap-3 font-semibold w-full sm:w-auto"
+    :class="activeStep === 2 ? 'text-green-700' : 'text-gray-400'"
   >
+    <span
+      class="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+      :class="activeStep === 2 ? 'bg-green-100' : 'bg-gray-100'"
+    >
     <!-- أيقونة التخفيض -->
     <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor">
       <path fill-rule="evenodd" clip-rule="evenodd"
@@ -133,10 +144,9 @@ function submit() {
     </svg>
   </span>
   التخفيض
-</button>
+  </button>
+</div>
 
-
-      </div>
 
       <!-- ===== FORM CARD ===== -->
       <div class="bg-white rounded-2xl shadow p-8">
@@ -144,7 +154,7 @@ function submit() {
         <!-- STEP 1 -->
         <div v-show="activeStep === 1" class="space-y-6">
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 
             <div>
               <label>المشروع</label>

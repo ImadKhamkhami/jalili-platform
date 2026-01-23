@@ -181,24 +181,63 @@ function printProjectStatement(projectId) {
             </p>
 
             <!-- الأزرار -->
-            <div class="flex gap-2 mt-auto" @click.stop>
-            <button
-                @click="printProjectStatement(project.id)"
-                class="px-4 py-1.5 rounded-xl
-                       border-2 border-yellow-600
-                       text-yellow-700 bg-white text-sm font-bold
-                       hover:bg-yellow-50 transition"
-            >
-                طباعة بيان الدفوعات
-            </button>
+             <div
+  class="
+    flex gap-2 mt-auto
+    items-center
+    w-full
+    overflow-hidden
+ justify-center
+
+  "
+  @click.stop
+>
+<button
+  @click="printProjectStatement(project.id)"
+  class="
+    flex items-center justify-center gap-2
+    px-3 py-1.5 sm:px-4
+    rounded-xl
+    border-2 border-yellow-600
+    text-yellow-700 bg-white
+    text-[11px] sm:text-sm font-bold
+    hover:bg-yellow-50 transition
+    whitespace-nowrap
+  "
+>
+  <svg xmlns="http://www.w3.org/2000/svg"
+       class="w-4 h-4 sm:w-5 sm:h-5"
+       fill="none"
+       viewBox="0 0 24 24"
+       stroke="currentColor"
+       stroke-width="2">
+    <path stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 9V2h12v7
+             M6 18H4a2 2 0 0 1-2-2v-5
+             a2 2 0 0 1 2-2h16
+             a2 2 0 0 1 2 2v5
+             a2 2 0 0 1-2 2h-2
+             M6 14h12v8H6z" />
+  </svg>
+
+  <span class="leading-none">
+     بيان الدفوعات
+  </span>
+</button>
+
 
 <a
     :href="`/projects/${project.id}/edit`"
-    class="px-4 py-1.5 rounded-xl border border-green-700
-           text-green-600 bg-white text-sm hover:bg-green-50 font-bold transition
-           flex items-center gap-1"
->
-    <!-- أيقونة التعديل -->
+class="
+  px-3 py-1.5 sm:px-4
+  rounded-xl border border-green-700
+  text-green-600 bg-white
+  text-[11px] sm:text-sm
+  hover:bg-green-50 font-bold transition
+  flex items-center gap-1
+  whitespace-nowrap
+">
     <svg xmlns="http://www.w3.org/2000/svg"
          class="w-4 h-4"
          fill="none"
@@ -215,9 +254,15 @@ function printProjectStatement(projectId) {
 
 <button
     @click.stop="confirmDelete(project)"
-    class="px-4 py-1.5 rounded-xl border border-green-700
-           text-green-600 bg-white text-sm hover:bg-green-50 font-bold transition
-           flex items-center gap-1"
+class="
+  px-3 py-1.5 sm:px-4
+  rounded-xl border border-green-700
+  text-green-600 bg-white
+  text-[11px] sm:text-sm
+  hover:bg-green-50 font-bold transition
+  flex items-center gap-1
+  whitespace-nowrap
+"
 >
     <!-- أيقونة الحذف -->
     <svg xmlns="http://www.w3.org/2000/svg"
