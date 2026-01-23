@@ -1,4 +1,7 @@
-FROM php:8.2-fpm-bullseye
+FROM php:8.2-apache
+
+# Enable Apache rewrite
+RUN a2enmod rewrite
 
 # System dependencies
 RUN apt-get update && apt-get install -y \
@@ -7,16 +10,21 @@ RUN apt-get update && apt-get install -y \
     wkhtmltopdf \
     && docker-php-ext-install pdo pdo_mysql zip
 
+# Set wkhtmltopdf path
+RUN which wkhtmltopdf
+
 # Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www
+WORKDIR /var/www/html
 
 COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
-# تأكيد وجود wkhtmltopdf
-RUN wkhtmltopdf --version
+# Laravel permissions
+RUN chown -R www-data:www-data storage bootstrap/cache
 
-CMD ["php-fpm"]
+EXPOSE 80
+
+CMD ["apache2-foreground"]
