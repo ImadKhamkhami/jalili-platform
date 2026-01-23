@@ -58,21 +58,27 @@ class Payment extends Model
     {
         return $this->belongsTo(LandPlot::class);
     }
-    protected static function booted()
+protected static function booted()
 {
     static::creating(function ($payment) {
 
-        if ($payment->receipt_number) {
+        // إذا تم تمرير receipt_number يدويًا
+        if (!empty($payment->receipt_number)) {
             return;
         }
 
         $year = now()->year;
 
-        $last = self::orderBy('id', 'desc')->first();
+        // 🔐 جلب آخر رقم بشكل آمن
+        $lastNumber = self::whereNotNull('receipt_number')
+            ->orderBy('id', 'desc')
+            ->value('receipt_number');
 
-        $next = $last
-            ? intval(substr($last->receipt_number, -5)) + 1
-            : 1;
+        $next = 1;
+
+        if ($lastNumber) {
+            $next = intval(substr($lastNumber, -5)) + 1;
+        }
 
         $payment->receipt_number =
             'REC-' . $year . '-' . str_pad($next, 5, '0', STR_PAD_LEFT);

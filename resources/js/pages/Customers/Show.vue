@@ -201,7 +201,7 @@ function money(v) {
 
         </div>
       </div>
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+
       <!-- ================== الشقق ================== -->
       <section v-if="apartments.length" class="mb-14">
         <h2 class="text-lg font-bold text-green-700 mb-4"> الشقق</h2>
@@ -300,7 +300,7 @@ function money(v) {
           </table>
         </div>
       </section>
-</div>
+
     </div>
   </AppLayout>
 </template>
