@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.2-fpm-bullseye
 
 # System dependencies
 RUN apt-get update && apt-get install -y \
@@ -16,7 +16,7 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
-# تأكيد وجود wkhtmltopdf (اختياري لكنه مفيد)
+# تأكيد وجود wkhtmltopdf
 RUN wkhtmltopdf --version
 
 CMD ["php-fpm"]
