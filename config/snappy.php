@@ -1,4 +1,5 @@
 <?php
+
 return [
 
     'pdf' => [
@@ -16,7 +17,7 @@ return [
 
     'image' => [
         'enabled' => true,
-        'binary' => env('WKHTMLTOPDF_BINARY', '/usr/bin/wkhtmltoimage'),
+        'binary' => env('WKHTMLTOIMAGE_BINARY', '/usr/bin/wkhtmltoimage'),
         'timeout' => false,
         'options' => [],
         'env' => [],
