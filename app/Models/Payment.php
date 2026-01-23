@@ -27,6 +27,8 @@ class Payment extends Model
         'payment_method', // cash | check | transfer | bill
         'amount',
         'paid_at',
+
+        'receipt_number',
     ];
 
     protected $casts = [
@@ -59,6 +61,10 @@ class Payment extends Model
     protected static function booted()
 {
     static::creating(function ($payment) {
+
+        if ($payment->receipt_number) {
+            return;
+        }
 
         $year = now()->year;
 
