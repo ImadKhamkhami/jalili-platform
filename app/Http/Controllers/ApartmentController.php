@@ -10,6 +10,8 @@ use App\Models\Customer;
 use App\Models\Shop;
 use Illuminate\Support\Facades\DB;
 use App\Models\Transfer;
+use Inertia\Inertia;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -445,9 +447,10 @@ public function store(Request $request)
         'total_price' => $totalPrice,
     ]);
 
-        return redirect(
-        "/projects/{$validated['project_id']}/apartments?focus={$apartment->id}"
-    );
+return Inertia::location(
+    "/projects/{$validated['project_id']}/apartments?focus={$apartment->id}"
+);
+
 }
     /* =====================================================
         EDIT
@@ -655,7 +658,10 @@ public function update(Request $request, Apartment $apartment)
         'total_price' => $totalPrice,
     ]);
 
-    return redirect()->route('apartments.show', $apartment->id);
+    return Inertia::location(
+    route('apartments.show', $apartment->id)
+);
+
 }
 
     /* =====================================================
@@ -681,7 +687,8 @@ public function update(Request $request, Apartment $apartment)
     $projectId = $apartment->building->project_id;
     $building  = $apartment->building->name;
     $id        = $apartment->id;
-
+    
+    session()->flash('success', 'تم حذف الشقة ودفوعاتها بنجاح');
     return redirect(
         "/projects/{$projectId}/apartments?building={$building}&focus-deleted={$id}"
     )->with('success', 'تم حذف الشقة ودفوعاتها بنجاح');
