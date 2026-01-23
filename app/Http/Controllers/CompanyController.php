@@ -78,22 +78,21 @@ public function index(Request $request)
     {
         return Inertia::render('Companies/Create');
     }
-
-    public function store(Request $request)
-   {
-      $validated = $request->validate([
+public function store(Request $request)
+{
+    $validated = $request->validate([
         'name' => 'required|string|max:255',
-      ]);
+    ]);
 
-      // ⬅️ مهم: نخزنو الشركة في متغير
-      $company = Company::create($validated);
+    $company = Company::create($validated);
 
-      // ⬅️ نرجعو للـ index مع focus
-     return redirect()->route('companies.index', [
-       'focus-company' => $company->id
-     ]);
+    return Inertia::location(
+        route('companies.index', [
+            'focus-company' => $company->id
+        ])
+    );
+}
 
-   }
     public function edit(Company $company) 
     {
         return Inertia::render('Companies/Edit', [
@@ -101,18 +100,20 @@ public function index(Request $request)
         ]);
     }
 
-    public function update(Request $request, Company $company)
-    {
-        $validated = $request->validate([
-       'name' => 'required|string|max:255',
-        ]);
+public function update(Request $request, Company $company)
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+    ]);
 
-        $company->update($validated);
+    $company->update($validated);
 
-        return redirect()->route('companies.index', [
-        'focus-company' => $company->id
-        ]);
-    }
+    return Inertia::location(
+        route('companies.index', [
+            'focus-company' => $company->id
+        ])
+    );
+}
 
     public function destroy(Company $company)
     {
