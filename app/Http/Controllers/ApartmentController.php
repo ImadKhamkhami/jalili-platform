@@ -11,18 +11,19 @@ use App\Models\Shop;
 use Illuminate\Support\Facades\DB;
 use App\Models\Transfer;
 use Inertia\Inertia;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Storage;
-use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 
 class ApartmentController extends Controller
 {
     /* =====================================================
         PDF
     ===================================================== */
+
+
 public function invoicePdf(Apartment $apartment)
 {
     $building = $apartment->building;
@@ -39,8 +40,6 @@ public function invoicePdf(Apartment $apartment)
     if ($tranche) $file .= " - الشطر {$tranche}";
     $file .= ".pdf";
 
-    $encoded = rawurlencode($file);
-
     /* ===== الدفوعات ===== */
     $payments = Payment::where('context', 'apartment')
         ->where('apartment_id', $apartment->id)
@@ -50,8 +49,8 @@ public function invoicePdf(Apartment $apartment)
     $paidTotal = $payments->sum('amount');
     $remaining = max($apartment->total_price - $paidTotal, 0);
 
-    /* ===== PDF ===== */
-    $pdf = PDF::loadView('apartments.invoice', compact(
+    /* ===== PDF (DomPDF) ===== */
+    $pdf = Pdf::loadView('apartments.invoice', compact(
         'apartment',
         'building',
         'project',
@@ -61,11 +60,10 @@ public function invoicePdf(Apartment $apartment)
         'remaining'
     ))->setPaper('a4', 'portrait');
 
-    return $pdf->inline($encoded, [
-        'Content-Type'        => 'application/pdf',
-        'Content-Disposition' => "inline; filename*=UTF-8''{$encoded}"
-    ]);
+    // عرض في المتصفح
+    return $pdf->stream($file);
 }
+
 
     /* =====================================================
         INDEX (كل المشاريع)
@@ -447,9 +445,9 @@ public function store(Request $request)
         'total_price' => $totalPrice,
     ]);
 
-return Inertia::location(
+  return Inertia::location(
     "/projects/{$validated['project_id']}/apartments?focus={$apartment->id}"
-);
+  );
 
 }
     /* =====================================================
