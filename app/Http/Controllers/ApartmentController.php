@@ -34,12 +34,16 @@ public function invoicePdf(Apartment $apartment)
 
     /* ===== العنوان ===== */
     $title = "بيان الشقة {$apartment->number} – عمارة {$building->name}";
-    if ($tranche) $title .= " – الشطر {$tranche}";
+    if ($tranche) {
+        $title .= " – الشطر {$tranche}";
+    }
     $title .= " – إقامة {$project->name}";
 
     /* ===== اسم الملف ===== */
     $file = "بيان الشقة {$apartment->number} - عمارة {$building->name}";
-    if ($tranche) $file .= " - الشطر {$tranche}";
+    if ($tranche) {
+        $file .= " - الشطر {$tranche}";
+    }
     $file .= ".pdf";
 
     /* ===== الدفوعات ===== */
@@ -51,7 +55,7 @@ public function invoicePdf(Apartment $apartment)
     $paidTotal = $payments->sum('amount');
     $remaining = max($apartment->total_price - $paidTotal, 0);
 
-    /* ===== إعداد الخطوط ===== */
+    /* ===== إعداد الخطوط الافتراضية ===== */
     $defaultConfig = (new ConfigVariables())->getDefaults();
     $fontDirs = $defaultConfig['fontDir'];
 
@@ -63,17 +67,30 @@ public function invoicePdf(Apartment $apartment)
         'mode' => 'utf-8',
         'format' => 'A4',
         'orientation' => 'P',
-        'directionality' => 'rtl',
+
+        // ⭐ دعم العربية RTL
+        'directionality'   => 'rtl',
+        'autoLangToFont'   => true,
+        'autoScriptToLang' => true,
+
         'default_font' => 'tajawal',
+
         'fontDir' => array_merge($fontDirs, [
             storage_path('fonts'),
         ]),
+
         'fontdata' => $fontData + [
             'tajawal' => [
                 'R' => 'Tajawal-Regular.ttf',
                 'B' => 'Tajawal-Bold.ttf',
             ],
         ],
+
+        // هوامش ثابتة (لا تعتمد على CSS فقط)
+        'margin_top'    => 20,
+        'margin_bottom' => 20,
+        'margin_left'   => 15,
+        'margin_right'  => 15,
     ]);
 
     /* ===== HTML ===== */
@@ -89,13 +106,12 @@ public function invoicePdf(Apartment $apartment)
 
     $mpdf->WriteHTML($html);
 
-    /* ===== عرض في المتصفح ===== */
+    /* ===== عرض PDF في المتصفح ===== */
     return response($mpdf->Output($file, 'S'), 200, [
         'Content-Type'        => 'application/pdf; charset=utf-8',
         'Content-Disposition' => "inline; filename*=UTF-8''" . rawurlencode($file),
     ]);
 }
-
     /* =====================================================
         INDEX (كل المشاريع)
     ===================================================== */
