@@ -16,12 +16,17 @@
         : 0;
 @endphp
 
+
+
 <style>
+
+@page {
+    margin: 15mm 12mm;
+}
 
 body {
     font-family: 'Tajawal', sans-serif;
     direction: rtl;
-    unicode-bidi: embed;
     font-size: 14px;
     color: #333;
     margin: 0;
@@ -48,6 +53,11 @@ body {
 .header img {
     width: 130px;
 }
+th, td {
+    text-align: center;
+    vertical-align: middle;
+}
+
 
 .header h1 {
     margin-top: 10px;
@@ -82,8 +92,8 @@ body {
 
 .image-box img {
     width: 100%;
-    height: 320px;
-    object-fit: cover;
+    height: auto;
+    max-height: 320px;
     border-radius: 14px;
 }
 

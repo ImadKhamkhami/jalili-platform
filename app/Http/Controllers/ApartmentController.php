@@ -11,7 +11,9 @@ use App\Models\Shop;
 use Illuminate\Support\Facades\DB;
 use App\Models\Transfer;
 use Inertia\Inertia;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Mpdf\Mpdf;
+use Mpdf\Config\ConfigVariables;
+use Mpdf\Config\FontVariables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -49,8 +51,33 @@ public function invoicePdf(Apartment $apartment)
     $paidTotal = $payments->sum('amount');
     $remaining = max($apartment->total_price - $paidTotal, 0);
 
-    /* ===== PDF (DomPDF) ===== */
-    $pdf = Pdf::loadView('apartments.invoice', compact(
+    /* ===== إعداد الخطوط ===== */
+    $defaultConfig = (new ConfigVariables())->getDefaults();
+    $fontDirs = $defaultConfig['fontDir'];
+
+    $defaultFontConfig = (new FontVariables())->getDefaults();
+    $fontData = $defaultFontConfig['fontdata'];
+
+    /* ===== إنشاء mPDF ===== */
+    $mpdf = new Mpdf([
+        'mode' => 'utf-8',
+        'format' => 'A4',
+        'orientation' => 'P',
+        'directionality' => 'rtl',
+        'default_font' => 'tajawal',
+        'fontDir' => array_merge($fontDirs, [
+            storage_path('fonts'),
+        ]),
+        'fontdata' => $fontData + [
+            'tajawal' => [
+                'R' => 'Tajawal-Regular.ttf',
+                'B' => 'Tajawal-Bold.ttf',
+            ],
+        ],
+    ]);
+
+    /* ===== HTML ===== */
+    $html = view('apartments.invoice', compact(
         'apartment',
         'building',
         'project',
@@ -58,12 +85,16 @@ public function invoicePdf(Apartment $apartment)
         'payments',
         'paidTotal',
         'remaining'
-    ))->setPaper('a4', 'portrait');
+    ))->render();
 
-    // عرض في المتصفح
-    return $pdf->stream($file);
+    $mpdf->WriteHTML($html);
+
+    /* ===== عرض في المتصفح ===== */
+    return response($mpdf->Output($file, 'S'), 200, [
+        'Content-Type'        => 'application/pdf; charset=utf-8',
+        'Content-Disposition' => "inline; filename*=UTF-8''" . rawurlencode($file),
+    ]);
 }
-
 
     /* =====================================================
         INDEX (كل المشاريع)
