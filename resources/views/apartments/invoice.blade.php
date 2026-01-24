@@ -5,9 +5,6 @@
 <title>{{ $title }}</title>
 
 @php
-    $fontRegular = public_path('fonts/Tajawal-Regular.ttf');
-    $fontBold    = public_path('fonts/Tajawal-Bold.ttf');
-
     function money($v) {
         return number_format($v ?? 0, 2, ',', '.');
     }
