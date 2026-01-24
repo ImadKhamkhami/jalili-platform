@@ -20,18 +20,11 @@
 @endphp
 
 <style>
-@font-face {
-    font-family: 'Tajawal';
-    src: url("file://{{ $fontRegular }}");
-}
-@font-face {
-    font-family: 'Tajawal';
-    src: url("file://{{ $fontBold }}");
-    font-weight: bold;
-}
 
 body {
     font-family: 'Tajawal', sans-serif;
+    direction: rtl;
+    unicode-bidi: embed;
     font-size: 14px;
     color: #333;
     margin: 0;
