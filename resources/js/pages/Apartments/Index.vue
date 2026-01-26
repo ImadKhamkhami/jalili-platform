@@ -245,11 +245,6 @@ const filteredShops = computed(() => {
         .sort((a, b) => Number(a.number) - Number(b.number))
 })
 
-
-
-
-
-
 </script>
 
 
@@ -265,7 +260,7 @@ const filteredShops = computed(() => {
     <div class="flex items-center gap-4">
 <!-- زر الطباعة -->
 <button
-  @click="openPrintModal"
+  @click="printPlan"
   title="طباعة بيان الدفوعات"
   class="group h-10 w-10 flex items-center justify-center
          bg-yellow-50 text-yellow-600
