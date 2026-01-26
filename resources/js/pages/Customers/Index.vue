@@ -108,18 +108,8 @@ function resetSearch() {
 
       </div>
     </div>
-
-    <!-- قبل البحث -->
-<div
-  v-if="!form.search"
-  class="bg-white rounded-2xl shadow p-10 text-center text-gray-400"
->
-  أدخل اسم الزبون أو رقم البطاقة ثم اضغط على زر البحث
-</div>
-
-
-    <!-- ================= جدول النتائج ================= -->
-    <div v-if="form.search" class="bg-white rounded-2xl shadow overflow-x-auto">
+    <!-- ================= جدول الزبناء (نفس تصميم الدفوعات) ================= -->
+    <div class="bg-white rounded-2xl shadow overflow-x-auto">
       <table class="w-full text-sm text-center">
         <thead class="bg-gray-50 text-gray-600">
           <tr>
@@ -146,57 +136,28 @@ function resetSearch() {
             </td>
 
             <td class="px-4 py-3 font-mono">
-              {{ customer.national_id }}
+              {{ customer.national_id ?? '-' }}
             </td>
 
             <td class="px-4 py-3">
-              {{ customer.phone || '-' }}
+              {{ customer.phone ?? '-' }}
             </td>
 
-            <!-- الإجراءات -->
             <td class="px-4 py-3">
-              <div class="flex justify-center gap-3">
-
-                <!-- عرض الملف -->
-                 <Link
-  :href="`/customers/${customer.id}`"
-  class="inline-flex items-center gap-2
-         px-3 py-1.5
-         rounded-lg
-         bg-green-50
-         text-green-700
-         hover:bg-green-100 hover:text-green-800
-         transition font-medium text-sm"
->
-  <!-- Eye Icon -->
-
-  <svg xmlns="http://www.w3.org/2000/svg"
-       class="w-5 h-5"
-       fill="none"
-       viewBox="0 0 24 24"
-       stroke="currentColor"
-       stroke-width="2">
-    <path stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-    <path stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M2.458 12C3.732 7.943 7.523 5 12 5
-             c4.478 0 8.268 2.943 9.542 7
-             -1.274 4.057-5.064 7-9.542 7
-             -4.477 0-8.268-2.943-9.542-7z" />
-  </svg>
-     <span>عرض الملف</span>
-</Link>
-
-              </div>
+              <Link
+                :href="`/customers/${customer.id}`"
+                class="inline-flex items-center gap-2
+                       px-3 py-1.5 rounded-lg
+                       bg-green-50 text-green-700
+                       hover:bg-green-100 transition">
+                👁 عرض الملف
+              </Link>
             </td>
           </tr>
 
-          <!-- لا نتائج -->
           <tr v-if="customers.length === 0">
             <td colspan="5" class="py-10 text-gray-400">
-              لا توجد نتائج 
+              لا توجد نتائج
             </td>
           </tr>
         </tbody>

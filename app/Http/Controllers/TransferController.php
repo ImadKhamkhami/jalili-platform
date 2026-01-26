@@ -261,7 +261,7 @@ public function index(Request $request)
             'customer_phone'  => $toCustomer->phone,
         ]);
 
-        return Inertia::location('transfers.index');
+        return Inertia::location(route('transfers.index'));
     }
 
     /* =========================================================
@@ -338,7 +338,7 @@ public function index(Request $request)
             'notes'          => $data['notes'],
         ]);
 
-        return Inertia::location('transfers.index');
+        return Inertia::location(route('transfers.index'));
     }
 
     /* =========================================================

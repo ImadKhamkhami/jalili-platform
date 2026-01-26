@@ -1,36 +1,72 @@
 <script setup lang="ts">
- import { dashboard, login, register } 
- from '@/routes'; import { Head, Link } 
- from '@inertiajs/vue3';
-  withDefaults( defineProps<{ canRegister: boolean; }>(),
-   { canRegister: true, }, ); 
-   </script>
-    <template>
-     <Head title="Welcome"> 
-        <link rel="preconnect" href="https://rsms.me/" /> 
-        <link rel="stylesheet" href="https://rsms.me/inter/inter.css" /> 
-        </Head> <div class="flex min-h-screen flex-col items-center justify-center bg-[#FAFAF8] p-6 text-[#1b1b18] dark:bg-[#0a0a0a]">
-             <!-- شعار + نص + زر داخل كارد --> 
-              <div class="w-full max-w-md bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.07)] p-10 text-center" > 
-                <!-- الشعار --> 
-                 <img src="/images/logo-jalili.jpg" alt="Jalili Logo" class="w-40 h-auto mx-auto mb-6" />
-                  <!-- العنوان -->
-                    <h1 class="text-2xl font-bold text-[#0A5A55] mb-3"> لإدارة المشاريع العقارية </h1>
-                     <!-- الوصف --> 
-                      <p class="text-gray-600 text-base leading-7 mb-6"> منصة جليلي إخوان لتسيير ومتابعة المباني، الشقق، والملفات الهندسية بكل سهولة. </p> 
-                      <!-- زر الدخول --> 
-                       <Link :href="login()" class="block w-full bg-[#0A5A55] hover:bg-[#074a45] text-white py-3 rounded-lg text-lg font-semibold transition" > الدخول إلى المنصة </Link> 
-                       </div> 
-                       </div> 
-                       </template> 
-                       <style> 
-                       /* أنيميشن لطيفة احترافية */
-                        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); }
-                         to { opacity: 1; transform: translateY(0); } } @keyframes scaleIn { from { opacity: 0; transform: scale(0.85); 
-                        } to { opacity: 1; transform: scale(1);
-                         } } @keyframes slideUp { from { opacity: 0; transform: translateY(25px); 
-                        } to { opacity: 1; transform: translateY(0); 
-                        } } .animate-fadeIn { animation: fadeIn 1s ease forwards;
-                         } .animate-scaleIn { animation: scaleIn 0.9s ease forwards;
-                         } .animate-slideUp { animation: slideUp 1.2s ease forwards; }
- </style>
+import { Head, Link } from '@inertiajs/vue3'
+
+withDefaults(
+  defineProps<{
+    canRegister: boolean
+  }>(),
+  {
+    canRegister: true,
+  }
+)
+</script>
+
+<template>
+  <Head title="Welcome">
+    <link rel="preconnect" href="https://rsms.me/" />
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+  </Head>
+
+  <div
+    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#FAFAF8] to-[#F0F5F4] px-6"
+  >
+    <!-- Card -->
+    <div
+      class="w-full max-w-md bg-white rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.08)] p-10 text-center animate-scaleIn"
+    >
+      <!-- Logo -->
+      <img
+        src="/images/logo-jalili.jpg"
+        alt="Jalili Freres"
+        class="w-36 h-auto mx-auto mb-6"
+      />
+
+      <!-- Title -->
+      <h1 class="text-2xl font-extrabold text-[#0A5A55] mb-3">
+        لإدارة المشاريع العقارية
+      </h1>
+
+      <!-- Description -->
+      <p class="text-gray-600 text-base leading-7 mb-8">
+        منصة <strong>جليلي إخوان</strong> لتسيير المباني و التجزئات 
+        والملفات  بكل سهولة واحترافية.
+      </p>
+
+      <!-- Login Button -->
+      <Link
+        href="/login"
+        class="block w-full bg-[#0A5A55] hover:bg-[#074a45] text-white py-3.5 rounded-xl text-lg font-bold tracking-wide transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+      >
+        الدخول إلى المنصة
+      </Link>
+
+    </div>
+  </div>
+</template>
+
+<style scoped>
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.8s ease-out forwards;
+}
+</style>

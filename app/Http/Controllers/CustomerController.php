@@ -151,15 +151,13 @@ public function index(Request $request)
 {
     $search = $request->input('search');
 
-    $customers = collect();
-
-    if ($search) {
-        $customers = Customer::query()
-            ->where('name', 'like', "%{$search}%")
-            ->orWhere('national_id', 'like', "%{$search}%")
-            ->orderBy('name')
-            ->get();
-    }
+    $customers = Customer::query()
+        ->when($search, function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('national_id', 'like', "%{$search}%");
+        })
+        ->orderBy('name')
+        ->get();
 
     return Inertia::render('Customers/Index', [
         'customers' => $customers,
@@ -168,6 +166,7 @@ public function index(Request $request)
         ],
     ]);
 }
+
 
 
 public function show(Request $request, Customer $customer)

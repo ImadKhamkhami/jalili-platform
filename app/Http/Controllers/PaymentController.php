@@ -333,7 +333,7 @@ public function store(Request $request)
         'paid_at'         => $validated['paid_at'],
     ]);
 
-    return Inertia::location('payments.index');
+    return Inertia::location(route('payments.index'));
 }
 
     /* =====================================================
@@ -560,7 +560,8 @@ public function update(Request $request, Payment $payment)
 
     $payment->update($validated);
 
-    return Inertia::location('payments.index');
+    return Inertia::location(route('payments.index'));
+
 }
 
 
