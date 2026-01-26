@@ -18,7 +18,7 @@ use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 class ShopController extends Controller
 {
      /* ===================== PDF ===================== */
-public function invoicePdf(Shop $shop)
+     public function invoicePrint(Shop $shop)
 {
     $shop->load('building.project');
 
@@ -41,7 +41,8 @@ public function invoicePdf(Shop $shop)
     $mezzanineArea  = $shop->mezzanine_area ?? 0;
     $mezzanineTotal = $shop->mezzanine_total_price ?? 0;
 
-    return PDF::loadView('shops.invoice', compact(
+    /* ===== PRINT VIEW (بدون PDF) ===== */
+    return view('shops.invoice', compact(
         'shop',
         'project',
         'title',
@@ -50,10 +51,9 @@ public function invoicePdf(Shop $shop)
         'remaining',
         'mezzanineArea',
         'mezzanineTotal'
-    ))
-    ->setPaper('a4', 'portrait')
-    ->stream();
+    ));
 }
+
 
     /* ===================== CREATE ===================== */
     public function create()

@@ -71,7 +71,7 @@
 
 {{-- ================== الشقق ================== --}}
 @php
-    $apartments = $units->where('context','apartment');
+    $apartments = $units->where('type','apartment');
 @endphp
 
 @if($apartments->count())
@@ -114,7 +114,7 @@
 
 {{-- ================== المحلات ================== --}}
 @php
-    $shops = $units->where('context','shop');
+    $shops = $units->where('type','shop');
 @endphp
 
 @if($shops->count())
@@ -155,7 +155,7 @@
 
 {{-- ================== القطع الأرضية ================== --}}
 @php
-    $lands = $units->where('context','land');
+    $lands = $units->where('type','land');
 @endphp
 
 @if($lands->count())
@@ -175,8 +175,8 @@
         @foreach($lands as $u)
         <tr>
             <td>{{ $u['project_name'] }}</td>
-            <td>{{ $u['land_number'] }}</td>
-            <td>{{ $u['road_view'] }}</td>
+            <td>{{ $u['number'] }}</td>
+            <td>{{ $u['extra'] }}</td>
             <td>{{ number_format($u['total_price'],2,',','.') }}</td>
             <td>{{ number_format($u['total_paid'],2,',','.') }}</td>
             <td>{{ number_format($u['remaining'],2,',','.') }}</td>
@@ -193,6 +193,11 @@
     </tfoot>
 </table>
 @endif
+
+<!-- 🖨️ طباعة تلقائية -->
+<script>
+    window.onload = () => window.print();
+</script>
 
 </body>
 </html>

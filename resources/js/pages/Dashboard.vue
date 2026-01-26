@@ -66,7 +66,6 @@ function formatMoney(value) {
       <input
         v-model="form.search"
         type="text"
-        placeholder=".............................................................."
         class="w-full border rounded-xl px-4 py-2
                focus:ring-2 focus:ring-green-200"
         @keyup.enter="submitSearch"
@@ -124,37 +123,78 @@ function formatMoney(value) {
 
     <!-- ================= الإحصائيات (نفس cards) ================= -->
 <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
-    <div class="bg-white rounded-2xl shadow p-5">
-        <div class="text-s text-gray-500 mb-1 font-bold">الشركات</div>
-        <div class="text-2xl font-bold">
-          {{ stats.companies }}
-        </div>
-      </div>
 
-      <div class="bg-white rounded-2xl shadow p-5">
-        <div class="text-s text-gray-500 mb-1 font-bold">المشاريع</div>
-        <div class="text-2xl font-bold">
-          {{ stats.projects }}
-        </div>
-      </div>
+  <!-- الشركات -->
+  <div class="bg-white rounded-2xl shadow p-5 flex items-center gap-4">
+    <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-green-50">
+      <!-- Company / Building (واضحة جدًا) -->
+      <svg class="w-8 h-8 text-green-600" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M3 21h18v-2H3v2zm2-4h4V7H5v10zm5 0h4V3h-4v14zm5 0h4V11h-4v6z"/>
+      </svg>
+    </div>
 
-      <div class="bg-white rounded-2xl shadow p-5">
-        <div class="text-s text-gray-500 mb-1 font-bold">الزبناء</div>
-        <div class="text-2xl font-bold">
-          {{ stats.customers }}
-        </div>
+    <div>
+      <div class="text-sm text-gray-500 font-semibold">الشركات</div>
+      <div class="text-2xl font-extrabold text-gray-800">
+        {{ stats.companies }}
       </div>
+    </div>
+  </div>
 
-      <div class="bg-white rounded-2xl shadow p-5">
-        <div class="text-s text-gray-500 mb-1 font-bold">
-           دفوعات اليوم
-        </div>
-        <div class="text-2xl font-bold text-green-600">
-          {{ formatMoney(stats.payments_sum) }} 
-        </div>
-      </div>
+  <!-- المشاريع -->
+  <div class="bg-white rounded-2xl shadow p-5 flex items-center gap-4">
+    <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-green-50">
+<!-- Projects / Plan -->
+<svg class="w-8 h-8 text-green-600" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M3 4h18v2H3V4zm0 4h12v2H3V8zm0 4h18v2H3v-2zm0 4h12v2H3v-2z"/>
+</svg>
 
     </div>
+
+    <div>
+      <div class="text-sm text-gray-500 font-semibold">المشاريع</div>
+      <div class="text-2xl font-extrabold text-gray-800">
+        {{ stats.projects }}
+      </div>
+    </div>
+  </div>
+
+  <!-- الزبناء -->
+  <div class="bg-white rounded-2xl shadow p-5 flex items-center gap-4">
+    <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-green-50">
+      <!-- Users (أوضح وأكثر توازن) -->
+      <svg class="w-8 h-8 text-green-600" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm-7 9v-1a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v1z"/>
+      </svg>
+    </div>
+
+    <div>
+      <div class="text-sm text-gray-500 font-semibold">الزبناء</div>
+      <div class="text-2xl font-extrabold text-gray-800">
+        {{ stats.customers }}
+      </div>
+    </div>
+  </div>
+
+  <!-- دفوعات اليوم -->
+  <div class="bg-white rounded-2xl shadow p-5 flex items-center gap-4">
+    <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-green-50">
+      <!-- Payments / Wallet -->
+      <svg class="w-8 h-8 text-green-600" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M2 7a3 3 0 0 1 3-3h14a1 1 0 0 1 1 1v2H5a1 1 0 0 0 0 2h16v8a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7zm15 6h2v2h-2v-2z"/>
+      </svg>
+    </div>
+
+    <div>
+      <div class="text-sm text-gray-500 font-semibold">دفوعات اليوم</div>
+      <div class="text-2xl font-bold text-green-600">
+        {{ formatMoney(stats.payments_sum) }}
+      </div>
+    </div>
+  </div>
+
+</div>
+
 
 <!-- ================= آخر الدفوعات (نفس جدول صفحة الدفوعات) ================= -->
 <div class="bg-white rounded-2xl shadow overflow-x-auto">

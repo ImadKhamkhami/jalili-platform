@@ -107,7 +107,7 @@ function formatDate(date) {
   >
 
         <!-- المشروع -->
-        <div class="col-span-2 lg:min-w-[180px] lg:flex-1">
+        <div>
           <label class="text-xs text-gray-500 mb-1 block">المشروع</label>
           <select v-model="filtersForm.project_id"
                   class="w-full border rounded-xl px-3 py-2">

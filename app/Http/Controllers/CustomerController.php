@@ -43,7 +43,7 @@ public function print(Request $request, Customer $customer)
             )
             ->when($building, fn ($q) =>
                 $q->whereHas('building', fn ($qq) =>
-                    $qq->where('name', $building) // ✅ نفس show
+                    $qq->where('name', $building)
                 )
             )
             ->get()
@@ -54,9 +54,9 @@ public function print(Request $request, Customer $customer)
                     ->sum('amount');
 
                 return [
-                    'context'         => 'apartment',
+                    'type'            => 'apartment',
                     'project_name'    => $a->building?->project?->name ?? '-',
-                    'building_number' => $a->building?->name ?? '-', // ✅ صحيح
+                    'building_number' => $a->building?->name ?? '-',
                     'tranche_number'  => $a->tranche_number,
                     'number'          => $a->number,
                     'total_price'     => $a->total_price,
@@ -83,7 +83,7 @@ public function print(Request $request, Customer $customer)
             )
             ->when($building, fn ($q) =>
                 $q->whereHas('building', fn ($qq) =>
-                    $qq->where('name', $building) // ✅ نفس show
+                    $qq->where('name', $building)
                 )
             )
             ->get()
@@ -94,9 +94,9 @@ public function print(Request $request, Customer $customer)
                     ->sum('amount');
 
                 return [
-                    'context'         => 'shop',
+                    'type'            => 'shop',
                     'project_name'    => $s->building?->project?->name ?? '-',
-                    'building_number' => $s->building?->name ?? '-', // ✅ تصحيح الخطأ القاتل
+                    'building_number' => $s->building?->name ?? '-',
                     'number'          => $s->number,
                     'total_price'     => $s->total_price,
                     'total_paid'      => $paid,
@@ -126,10 +126,10 @@ public function print(Request $request, Customer $customer)
                     ->sum('amount');
 
                 return [
-                    'context'      => 'land',
+                    'type'         => 'land',
                     'project_name' => $l->project?->name ?? '-',
-                    'land_number'  => $l->land_number,
-                    'road_view'    => 'الطريق: '.$l->road_type.'م — الواجهة: '.$l->view_type,
+                    'number'       => $l->land_number,
+                    'extra'        => 'الطريق: '.$l->road_type.'م — الواجهة: '.$l->view_type,
                     'total_price'  => $l->total_price,
                     'total_paid'   => $paid,
                     'remaining'    => $l->total_price - $paid,
@@ -139,14 +139,13 @@ public function print(Request $request, Customer $customer)
         $units = $units->merge($lands);
     }
 
-    // ================= PDF =================
-    return PDF::loadView('pdf.customer-file', [
-            'customer' => $customer,
-            'units'    => $units,
-        ])
-        ->setPaper('a4', 'portrait')
-        ->inline("customer-{$customer->id}.pdf");
+    /* ================= PRINT VIEW ================= */
+    return view('pdf.customer-file', [
+        'customer' => $customer,
+        'units'    => $units,
+    ]);
 }
+
 
 public function index(Request $request)
 {

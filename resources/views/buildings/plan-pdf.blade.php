@@ -4,18 +4,24 @@
     <meta charset="UTF-8">
 
     <style>
+        @page {
+            size: A4 portrait;
+            margin: 12mm;
+        }
+
         body {
             font-family: 'Tajawal', sans-serif;
             direction: rtl;
             margin: 20px;
+            color: #000;
         }
 
         h2.title {
-            text-align:center;
-            color:#0a6b6b;
-            margin-bottom:25px;
-            font-size:22px;
-            font-weight:bold;
+            text-align: center;
+            color: #0a6b6b;
+            margin-bottom: 25px;
+            font-size: 22px;
+            font-weight: bold;
         }
 
         .section-title {
@@ -29,15 +35,15 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed; /* ✅ مهم */
+            table-layout: fixed; /* ✅ مهم للطباعة */
             margin-bottom: 30px;
         }
 
         td {
             border: 2px solid #000;
-            width: 20%;                 /* 5 خانات دائما */
-            height: 140px;              /* ارتفاع ثابت */
-            padding: 28px 8px 10px;     /* ✅ فراغ علوي للشارات */
+            width: 20%;                 /* 5 خانات ثابتة */
+            height: 140px;              /* ارتفاع موحّد */
+            padding: 28px 8px 10px;     /* فراغ علوي للشارات */
             vertical-align: top;
             text-align: center;
             position: relative;
@@ -67,7 +73,7 @@
             font-size: 13.5px;
             margin: 4px 0;
             line-height: 1.7;
-            white-space: nowrap; /* ✅ سطر واحد */
+            white-space: nowrap;
         }
 
         .owner {
@@ -77,13 +83,21 @@
             color: #c62828;
         }
 
-        /* 🟡 مباعة */
+        /* شارة مباع */
         .sold-badge {
             background: #ffe082;
             border: 1px solid #f9a825;
             padding: 2px 8px;
             border-radius: 6px;
             display: inline-block;
+        }
+
+        /* ألوان الطباعة */
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
         }
     </style>
 </head>
@@ -163,7 +177,6 @@
             <div class="info">
                 @if($ap->has_terrace)
                     <strong>{{ $ap->area }} م² + {{ $ap->terrace_area }}</strong> م²
-                    
                 @else
                     <strong>{{ $ap->area }}</strong> م²
                 @endif
@@ -184,6 +197,11 @@
 </table>
 
 @endforeach
+
+<!-- 🖨️ طباعة تلقائية -->
+<script>
+    window.onload = () => window.print();
+</script>
 
 </body>
 </html>

@@ -8,6 +8,7 @@
             font-family: 'Tajawal', sans-serif;
             direction: rtl;
             margin: 20px;
+            color: #000;
         }
 
         h2.title {
@@ -28,19 +29,13 @@
 
         .stats-row span {
             display: inline-block;
-            margin: 0 10px;
+            margin: 0 8px;
             padding: 6px 16px;
             border-radius: 10px;
         }
 
         .stats-total {
-            color: #000;
-        }
-
-        .stats-sold {
-            background: #ffe082;
-            border-color: #f9a825;
-            color: #6d4c41;
+            background: #f3f3f3;
         }
 
         /* ===================================================
@@ -120,8 +115,17 @@
             color: #c62828;
             font-weight: bold;
         }
+
         .bolddd {
             font-weight: bold;
+        }
+
+        /* ===== إعدادات الطباعة ===== */
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
         }
     </style>
 </head>
@@ -131,26 +135,19 @@
 @php
     $totalLands = $lands->count();
     $soldLands  = $lands->where('status', 'مباعة')->count();
-    $vtLands  = $lands->where('status', 'متاحة')->count();
+    $vtLands    = $lands->where('status', 'متاحة')->count();
 @endphp
 
 {{-- ===================== العنوان ===================== --}}
 <h2 class="title">
-  تجزئة   {{ $project->name }}    
+    تجزئة {{ $project->name }}
 </h2>
 
 {{-- ===================== الإحصائيات ===================== --}}
 <div class="stats-row">
-    <span class="stats-total">
-        إجمالي القطع : {{ $totalLands }}
-    </span>
-
-    <span class="stats-total">
-        القطع المباعة : {{ $soldLands }}
-    </span>
-    <span class="stats-total">
-         الباقي : {{ $vtLands }}
-    </span>
+    <span class="stats-total">إجمالي القطع : {{ $totalLands }}</span>
+    <span class="stats-total">القطع المباعة : {{ $soldLands }}</span>
+    <span class="stats-total">الباقي : {{ $vtLands }}</span>
 </div>
 
 {{-- ===================== مخطط القطع ===================== --}}
@@ -164,12 +161,9 @@
             @endphp
 
             <td>
-
                 <div class="land-title">
                     @if($land->status === 'مباعة')
-                        <span class="sold-badge">
-                            قطعة {{ $land->land_number }}
-                        </span>
+                        <span class="sold-badge">قطعة {{ $land->land_number }}</span>
                     @else
                         قطعة {{ $land->land_number }}
                     @endif
@@ -188,8 +182,8 @@
                         {{ $land->customer_name }}
                     </div>
                 @endif
-
             </td>
+
         @endforeach
     </tr>
 @endforeach
@@ -200,7 +194,7 @@
 
 {{-- ===================== ملخص القطع حسب الزبناء ===================== --}}
 <h2 class="title">
-  تجزئة  {{ $project->name }} - توزيع القطع حسب الزبناء  
+    تجزئة {{ $project->name }} — توزيع القطع حسب الزبناء
 </h2>
 
 @php
@@ -223,11 +217,18 @@
             <tr>
                 <td class="summary-owner">{{ $customer }}</td>
                 <td class="bolddd">{{ $items->count() }}</td>
-                <td class="bolddd">{{ $items->pluck('land_number')->sort()->implode(' ، ') }}</td>
+                <td class="bolddd">
+                    {{ $items->pluck('land_number')->sort()->implode(' ، ') }}
+                </td>
             </tr>
         @endforeach
     </tbody>
 </table>
+
+<!-- 🖨️ طباعة تلقائية -->
+<script>
+    window.onload = () => window.print();
+</script>
 
 </body>
 </html>

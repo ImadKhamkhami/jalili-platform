@@ -27,7 +27,7 @@ public function statement(Project $project)
     // ================= العمارات =================
     foreach ($project->buildings as $building) {
 
-        $buildingNumber = $building->name; // ✅ رقم العمارة الصحيح
+        $buildingNumber = $building->name;
 
         // ---------- المحلات ----------
         foreach ($building->shops as $shop) {
@@ -46,7 +46,7 @@ public function statement(Project $project)
                 'remaining'   => $shop->total_price - $paid,
                 'payments'    => $shop->payments->map(fn ($p) => [
                     'amount' => $p->amount,
-                    'date'   => $p->paid_at?->format('d/m/Y'),
+                    'date'   => optional($p->paid_at)->format('d/m/Y'),
                 ])->toArray(),
             ];
         }
@@ -69,7 +69,7 @@ public function statement(Project $project)
                 'remaining'   => $apartment->total_price - $paid,
                 'payments'    => $apartment->payments->map(fn ($p) => [
                     'amount' => $p->amount,
-                    'date'   => $p->paid_at?->format('d/m/Y'),
+                    'date'   => optional($p->paid_at)->format('d/m/Y'),
                 ])->toArray(),
             ];
         }
@@ -92,18 +92,18 @@ public function statement(Project $project)
             'remaining'   => $land->total_price - $paid,
             'payments'    => $land->payments->map(fn ($p) => [
                 'amount' => $p->amount,
-                'date'   => $p->paid_at?->format('d/m/Y'),
+                'date'   => optional($p->paid_at)->format('d/m/Y'),
             ])->toArray(),
         ];
     }
 
-    return PDF::loadView('pdf.project-statement', [
+    // ✅ PRINT VIEW (بدون PDF)
+    return view('pdf.project-statement', [
         'project' => $project,
         'rows'    => $rows,
-    ])
-    ->setPaper('a4', 'portrait')
-    ->inline('statement.pdf');
+    ]);
 }
+
 
 
 

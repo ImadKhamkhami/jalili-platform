@@ -87,8 +87,11 @@ use App\Http\Controllers\CustomerQuickSearchController;
     Route::get('customers/quick-search', CustomerQuickSearchController::class)
     ->name('customers.quick-search');
     
-    Route::get('/customers/{customer}/print', [CustomerController::class, 'print'])
-    ->name('customers.print');
+    Route::get(
+    '/customers/{customer}/print',
+    [CustomerController::class, 'print']
+    )->name('customers.print');
+
     Route::get('/customers', [CustomerController::class, 'index'])
     ->name('customers.index');
     Route::get('/customers/{customer}', [CustomerController::class, 'show'])
@@ -141,45 +144,42 @@ use App\Http\Controllers\CustomerQuickSearchController;
         
     ------------------------------------------------------- */
 
-    Route::get('/buildings/{building}/plan/pdf', [\App\Http\Controllers\BuildingController::class, 'planPdf'])
-    ->name('buildings.plan.pdf');
-
 
      /* -------------------------------------------------------
         طباعة بيان الشقة
     ------------------------------------------------------- */
-    Route::get('/apartments/{apartment}/invoice/pdf', [ApartmentController::class, 'invoicePdf'])
-    ->name('apartments.invoice.pdf');
-    
+    Route::get('/apartments/{apartment}/invoice/pdf', [ApartmentController::class, 'invoicePrint']);
      /* -------------------------------------------------------
         طباعة بيان القطعة
     ------------------------------------------------------- */
-    Route::get('/lands/{land}/invoice/pdf',[LandPlotController::class, 'invoicePdf']
-     )->name('lands.invoice.pdf');
+    Route::get(
+    '/lands/{land}/invoice/pdf',
+    [LandPlotController::class, 'invoicePrint']
+    )->name('lands.invoice.print');
+
+
 
     /* -------------------------------------------------------
         طباعة بيان المحل
     ------------------------------------------------------- */
-    Route::get('/shops/{shop}/invoice/pdf', [ShopController::class, 'invoicePdf'])
-    ->name('shops.invoice.pdf');
+   Route::get('/shops/{shop}/invoice/pdf', [ShopController::class, 'invoicePrint'])
+    ->name('shops.invoice.print');
+
 
 
     /* -------------------------------------------------------
         طباعة دفوعات المشاريع و المخطط
     ------------------------------------------------------- */
 
-    Route::get('/buildings/{building}/plan', [BuildingController::class, 'plan'])
-    ->name('buildings.plan');
+    Route::get('/buildings/{building}/plan/pdf', [BuildingController::class, 'planPrint'])
+    ->name('buildings.plan.print');
+
+
 
     Route::get(
     '/buildings/{building}/tranches/{tranche}/payments/pdf',
     [\App\Http\Controllers\BuildingController::class, 'paymentsPdf']
-   )->name('buildings.tranche.payments.pdf');
-
-
-    Route::get('/projects/{project}/statement', [ProjectController::class, 'statement'])
-    ->name('projects.statement');
-
+    )->name('buildings.tranche.payments.pdf');
 
     // 🔹 عرض شقق مشروع معيّن — هذا هو الطريق الصحيح الوحيد
     Route::get('/projects/{project}/apartments', [ApartmentController::class, 'byProject'])

@@ -48,11 +48,6 @@
     </style>
 </head>
 <body>
-
-    <div class="logo">
-        <img src="{{ public_path('images/jalili-logo.png') }}">
-    </div>
-
     {{-- العنوان (قادِم جاهز من Controller) --}}
     <h2>
         {{ $title }}

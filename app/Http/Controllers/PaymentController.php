@@ -85,7 +85,7 @@ public function print(Request $request)
     'land'      => 'القطعة',
  ];
 
- $title = 'بيان الدفوعات';
+ $title = ' الدفوعات';
 
  // الفلاتر
  $context        = $request->context;

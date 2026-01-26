@@ -56,7 +56,6 @@ function resetSearch() {
           <input
             v-model="form.search"
             type="text"
-            placeholder=".............................................................."
             class="w-full border rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-200"
           />
         </div>

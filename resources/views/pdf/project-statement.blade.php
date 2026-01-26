@@ -14,38 +14,49 @@
             font-family: 'Tajawal', sans-serif;
             font-size: 12px;
             direction: rtl;
+            color: #000;
         }
 
-        h1 {
+        .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
-        h2 {
+        .header h1 {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .meta {
             text-align: center;
-            margin: 18px 0 10px 0;
+            margin: 8px 0 14px 0;
+            font-size: 13px;
+            font-weight: bold;
         }
 
         h3 {
             margin: 14px 0 6px 0;
             border-bottom: 1px solid #000;
             padding-bottom: 4px;
+            font-size: 14px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 18px;
+            margin-bottom: 10px;
         }
 
         th, td {
             border: 1px solid #000;
             padding: 6px;
             text-align: center;
+            vertical-align: middle;
         }
 
         th {
             background: #f2f2f2;
+            font-weight: bold;
         }
 
         .payments {
@@ -54,32 +65,46 @@
             line-height: 1.6;
         }
 
+        .total-project {
+            margin-top: 30px;
+            font-weight: bold;
+            background: #f9f9f9;
+        }
+
         .page-break {
             page-break-before: always;
         }
 
-        .meta {
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 12px;
-            font-weight: bold;
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
         }
     </style>
 </head>
+
 <body>
 
-{{-- ===== العنوان الرئيسي (مرة واحدة فقط) ===== --}}
 @php
     $hasLandsOnly = collect($rows)->every(fn($r) => $r['type'] === 'land');
+
+    // ===== مجموع المشروع كامل =====
+    $projectTotalPrice = collect($rows)->sum('total_price');
+    $projectPaid       = collect($rows)->sum('paid');
+    $projectRemaining  = collect($rows)->sum('remaining');
 @endphp
 
-<h1 style="text-align:center; margin-bottom:20px;">
-    @if($hasLandsOnly)
-        بيان دفوعات تجزئة {{ $project->name }}
-    @else
-        بيان دفوعات إقامة {{ $project->name }}
-    @endif
-</h1>
+<!-- ===== HEADER ===== -->
+<div class="header">
+    <h1>
+        @if($hasLandsOnly)
+            بيان دفوعات تجزئة {{ $project->name }}
+        @else
+            بيان دفوعات إقامة {{ $project->name }}
+        @endif
+    </h1>
+</div>
 
 @php
     $groups = collect($rows)->groupBy('group_key');
@@ -88,13 +113,13 @@
 @foreach($groups as $groupKey => $items)
 
     @php
-    $isLandGroup = $groupKey === 'lands';
+        $isLandGroup = $groupKey === 'lands';
 
-    if (!$isLandGroup) {
-        $firstItem = $items->first();
-        $buildingNumber = $firstItem['building'];
-        $tranche = $firstItem['tranche'];
-    }
+        if (!$isLandGroup) {
+            $firstItem = $items->first();
+            $buildingNumber = $firstItem['building'];
+            $tranche = $firstItem['tranche'];
+        }
 
         $shops      = $items->where('type', 'shop');
         $apartments = $items->where('type', 'apartment');
@@ -105,7 +130,6 @@
         <div class="page-break"></div>
     @endif
 
-    {{-- ===== عنوان العمارة ===== --}}
     @unless($isLandGroup)
         <div class="meta">
             عمارة {{ $buildingNumber }}
@@ -115,7 +139,7 @@
         </div>
     @endunless
 
-    {{-- ================= المحلات التجارية ================= --}}
+    {{-- ===== المحلات ===== --}}
     @if($shops->count())
         <h3>المحلات التجارية</h3>
         <table>
@@ -138,8 +162,7 @@
                     <td class="payments">
                         @forelse($row['payments'] as $p)
                             {{ number_format($p['amount'],2,',','.') }} — {{ $p['date'] }}<br>
-                        @empty —
-                        @endforelse
+                        @empty — @endforelse
                     </td>
                     <td>{{ number_format($row['paid'],2,',','.') }}</td>
                     <td>{{ number_format($row['remaining'],2,',','.') }}</td>
@@ -149,7 +172,7 @@
         </table>
     @endif
 
-    {{-- ================= الشقق ================= --}}
+    {{-- ===== الشقق ===== --}}
     @if($apartments->count())
         <h3>الشقق</h3>
         <table>
@@ -177,8 +200,7 @@
                     <td class="payments">
                         @forelse($row['payments'] as $p)
                             {{ number_format($p['amount'],2,',','.') }} — {{ $p['date'] }}<br>
-                        @empty —
-                        @endforelse
+                        @empty — @endforelse
                     </td>
                     <td>{{ number_format($row['paid'],2,',','.') }}</td>
                     <td>{{ number_format($row['remaining'],2,',','.') }}</td>
@@ -188,8 +210,9 @@
         </table>
     @endif
 
-    {{-- ================= القطع الأرضية ================= --}}
+    {{-- ===== القطع الأرضية ===== --}}
     @if($lands->count())
+        <h3>القطع الأرضية</h3>
         <table>
             <thead>
                 <tr>
@@ -210,8 +233,7 @@
                     <td class="payments">
                         @forelse($row['payments'] as $p)
                             {{ number_format($p['amount'],2,',','.') }} — {{ $p['date'] }}<br>
-                        @empty —
-                        @endforelse
+                        @empty — @endforelse
                     </td>
                     <td>{{ number_format($row['paid'],2,',','.') }}</td>
                     <td>{{ number_format($row['remaining'],2,',','.') }}</td>
@@ -222,6 +244,18 @@
     @endif
 
 @endforeach
+
+{{-- ===== المجموع النهائي للمشروع ===== --}}
+<table class="total-project">
+    <tr>
+        <th>مجموع  دفوعات  {{ $project->name }}</th>
+        <th>{{ number_format($projectTotalPrice,2,',','.') }}</th>
+    </tr>
+</table>
+
+<script>
+    window.onload = () => window.print();
+</script>
 
 </body>
 </html>

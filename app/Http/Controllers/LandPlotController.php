@@ -20,16 +20,12 @@ class LandPlotController extends Controller
         طباعة بيان القطعة
     ------------------------------------------------------- */
 
-public function invoicePdf(LandPlot $land)
+public function invoicePrint(LandPlot $land)
 {
     $land->load('project');
 
     /* ===== العنوان ===== */
     $title = "بيان القطعة رقم {$land->land_number} – {$land->project->name}";
-
-    /* ===== اسم الملف ===== */
-    $file = "بيان القطعة {$land->land_number}.pdf";
-    $encoded = rawurlencode($file);
 
     /* ===== الدفوعات ===== */
     $payments = Payment::where('context', 'land')
@@ -43,26 +39,15 @@ public function invoicePdf(LandPlot $land)
         ? round(($paidTotal / $land->total_price) * 100, 1)
         : 0;
 
-    /* ===== PDF ===== */
-    $pdf = PDF::loadView('lands.invoice', compact(
+    /* ===== PRINT VIEW (بدون PDF) ===== */
+    return view('lands.invoice', compact(
         'land',
         'title',
         'payments',
         'paidTotal',
         'remaining',
         'progress'
-    ))
-    ->setPaper('a4', 'portrait')
-    ->setOption('margin-top', 10)
-    ->setOption('margin-bottom', 10)
-    ->setOption('margin-left', 10)
-    ->setOption('margin-right', 10);
-
-    /* ✅ فتح في المتصفح بدون تحميل */
-    return $pdf->inline($encoded, [
-        'Content-Type'        => 'application/pdf',
-        'Content-Disposition' => "inline; filename*=UTF-8''{$encoded}"
-    ]);
+    ));
 }
 
     /* -------------------------------------------------------
@@ -74,17 +59,10 @@ public function printPlan(Project $project)
         ->orderByRaw('CAST(land_number AS UNSIGNED) ASC')
         ->get();
 
-    $html = view('pdf.lands-plan', [
+    return view('pdf.lands-plan', [
         'project' => $project,
         'lands'   => $lands,
-    ])->render();
-
-    return PDF::loadHTML($html)
-        ->setPaper('a4')
-        ->setOrientation('portrait')
-        ->setOption('encoding', 'UTF-8')
-        ->setOption('enable-local-file-access', true)
-        ->stream('lands-plan.pdf');
+    ]);
 }
 
 

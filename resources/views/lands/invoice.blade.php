@@ -5,27 +5,19 @@
 <title>{{ $title }}</title>
 
 @php
-    $fontRegular = public_path('fonts/Tajawal-Regular.ttf');
-    $fontBold    = public_path('fonts/Tajawal-Bold.ttf');
-
     function money($v) {
         return number_format($v ?? 0, 2, ',', '.');
     }
 @endphp
 
 <style>
-@font-face {
-    font-family: 'Tajawal';
-    src: url("file://{{ $fontRegular }}");
-}
-@font-face {
-    font-family: 'Tajawal';
-    src: url("file://{{ $fontBold }}");
-    font-weight: bold;
+/* PAGE */
+@page {
+    margin: 15mm 12mm;
 }
 
 body {
-    font-family: 'Tajawal', sans-serif;
+    font-family: Tajawal, Arial, sans-serif;
     font-size: 14px;
     color: #333;
     margin: 0;
@@ -52,36 +44,27 @@ body {
     color: #1b7d3c;
 }
 
-/* INFO */
-.info-grid {
-    display: table;
+/* INFO GRID (TABLE SAFE FOR PRINT) */
+.info-table {
     width: 100%;
+    border-collapse: collapse;
     margin-bottom: 30px;
 }
 
-.info-text {
-    display: table-cell;
-    width: 60%;
+.info-table td {
     vertical-align: top;
     padding-left: 20px;
 }
 
-/* IMAGE (نفس الشقق) */
-.info-image {
-    display: table-cell;
-    width: 40%;
-    text-align: center;
-    vertical-align: top;
-}
-
+/* IMAGE */
 .image-box img {
-    width: 320px;        /* حجم ثابت */
+    width: 300px;
     max-width: 100%;
     height: auto;
-    object-fit: contain;
-    border-radius: 14px;
+    border-radius: 12px;
 }
 
+/* LABELS */
 .label {
     font-weight: bold;
     color: #1b7d3c;
@@ -108,23 +91,23 @@ body {
 }
 
 /* TABLES */
-.summary-table,
-.payments-table {
+.payments-table,
+.summary-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.summary-table th,
-.summary-table td,
 .payments-table th,
-.payments-table td {
+.payments-table td,
+.summary-table th,
+.summary-table td {
     border: 1px solid #000;
     padding: 10px;
     text-align: center;
 }
 
-.summary-table th,
-.payments-table th {
+.payments-table th,
+.summary-table th {
     background: #f4fbf6;
 }
 
@@ -138,48 +121,53 @@ body {
 }
 </style>
 </head>
+<script>
+    window.onload = function () {
+        window.print();
+    };
+</script>
+
 
 <body>
 <div class="page">
 
 <!-- HEADER -->
 <div class="header">
-    <img src="{{ public_path('images/logo-jalili.jpg') }}">
     <h1>{{ $title }}</h1>
 </div>
 
 <!-- INFO -->
-<div class="info-grid">
+<table class="info-table">
+    <tr>
+        <td width="60%">
+            <div class="label">رقم القطعة</div>
+            <div class="value">{{ $land->land_number }}</div>
 
-    <div class="info-text">
-        <div class="label">رقم القطعة</div>
-        <div class="value">{{ $land->land_number }}</div>
+            <div class="label">المساحة</div>
+            <div class="value">{{ $land->area }} م²</div>
 
-        <div class="label">المساحة</div>
-        <div class="value">{{ $land->area }} م²</div>
+            <div class="label">نوع الطريق</div>
+            <div class="value">{{ $land->road_type }}</div>
 
-        <div class="label">نوع الطريق</div>
-        <div class="value">{{ $land->road_type }}</div>
+            <div class="label">الواجهة</div>
+            <div class="value">{{ $land->view_type }}</div>
 
-        <div class="label">الواجهة</div>
-        <div class="value">{{ $land->view_type }}</div>
+            <div class="label">حالة القطعة</div>
+            <div class="value">{{ $land->status }}</div>
 
-        <div class="label">حالة القطعة</div>
-        <div class="value">{{ $land->status }}</div>
+            <div class="label">صاحب القطعة</div>
+            <div class="value">{{ $land->customer_name ?? '—' }}</div>
+        </td>
 
-        <div class="label">صاحب القطعة</div>
-        <div class="value">{{ $land->customer_name ?? '—' }}</div>
-    </div>
-
-    @if($land->image)
-    <div class="info-image">
-        <div class="image-box">
-            <img src="{{ public_path('storage/'.$land->image) }}">
-        </div>
-    </div>
-    @endif
-
-</div>
+        @if($land->image)
+        <td width="40%" align="center">
+            <div class="image-box">
+                <img src="{{ asset('storage/'.$land->image) }}" alt="land">
+            </div>
+        </td>
+        @endif
+    </tr>
+</table>
 
 <!-- TOTAL PRICE -->
 <div class="total-box">
@@ -190,7 +178,7 @@ body {
 
 <!-- PAYMENTS -->
 @if($payments->count())
-<div class="payments-title">تفاصيل الدفوعات</div>
+<div class="payments-title"> الدفوعات</div>
 
 <table class="payments-table">
     <thead>
@@ -218,7 +206,7 @@ body {
 </table>
 @endif
 
-<!-- FINANCIAL SUMMARY -->
+<!-- SUMMARY -->
 @if($payments->count())
 <div class="summary-title">الملخص المالي</div>
 

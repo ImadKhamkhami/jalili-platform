@@ -34,9 +34,7 @@ public function plan(Building $building)
     ]);
 }
  
-
-
-public function planPdf(Building $building, Request $request)
+public function planPrint(Building $building, Request $request)
 {
     $tranche = $request->get('tranche');
 
@@ -52,11 +50,10 @@ public function planPdf(Building $building, Request $request)
         ->groupBy('floor');
 
     /* ===================== المحلات التجارية ===================== */
- $shops = \App\Models\Shop::where('building_id', $building->id)
-    ->when($tranche, fn ($q) => $q->where('tranche_number', $tranche))
-    ->orderByRaw('CAST(number AS UNSIGNED)')
-    ->get();
-
+    $shops = \App\Models\Shop::where('building_id', $building->id)
+        ->when($tranche, fn ($q) => $q->where('tranche_number', $tranche))
+        ->orderByRaw('CAST(number AS UNSIGNED)')
+        ->get();
 
     /* ===================== عنوان الصفحة ===================== */
     $title = "مخطط العمارة {$building->name}";
@@ -65,33 +62,17 @@ public function planPdf(Building $building, Request $request)
     }
     $title .= " – إقامة {$project->name}";
 
-    /* ===================== اسم الملف ===================== */
-    $file = "مخطط - عمارة {$building->name}";
-    if ($tranche) {
-        $file .= " - شطر {$tranche}";
-    }
-    $file .= ".pdf";
-
-    $encoded = rawurlencode($file);
-
-    /* ===================== PDF ===================== */
-    $pdf = \Barryvdh\Snappy\Facades\SnappyPdf::loadView(
-        'buildings.plan-pdf',
-        [
-            'building'   => $building,
-            'project'    => $project,
-            'apartments' => $apartments,
-            'shops'      => $shops,
-            'tranche'    => $tranche,
-            'title'      => $title,
-        ]
-    )->setPaper('a4', 'portrait');
-
-    return $pdf->inline($encoded, [
-        'Content-Type'        => 'application/pdf',
-        'Content-Disposition' => "inline; filename*=UTF-8''{$encoded}",
+    /* ===================== PRINT VIEW ===================== */
+    return view('buildings.plan-pdf', [
+        'building'   => $building,
+        'project'    => $project,
+        'apartments' => $apartments,
+        'shops'      => $shops,
+        'tranche'    => $tranche,
+        'title'      => $title,
     ]);
 }
+
 
 
 

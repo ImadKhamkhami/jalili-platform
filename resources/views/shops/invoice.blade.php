@@ -5,9 +5,6 @@
 <title>{{ $title }}</title>
 
 @php
-    $fontRegular = public_path('fonts/Tajawal-Regular.ttf');
-    $fontBold    = public_path('fonts/Tajawal-Bold.ttf');
-
     function money($v) {
         return number_format($v ?? 0, 2, ',', '.');
     }
@@ -18,19 +15,13 @@
         ? round(($paidTotal / $shop->total_price) * 100, 1)
         : 0;
 
-    $baseShopPrice = $shop->area * $shop->price_per_m2;
-    $mezzaninePrice = $shop->mezzanine_total_price ?? 0;
+    $baseShopPrice   = $shop->area * $shop->price_per_m2;
+    $mezzaninePrice  = $shop->mezzanine_total_price ?? 0;
 @endphp
 
 <style>
-@font-face {
-    font-family: 'Tajawal';
-    src: url("file://{{ $fontRegular }}");
-}
-@font-face {
-    font-family: 'Tajawal';
-    src: url("file://{{ $fontBold }}");
-    font-weight: bold;
+@page {
+    margin: 15mm 12mm;
 }
 
 body {
@@ -45,13 +36,14 @@ body {
     margin: 30px auto;
 }
 
+/* HEADER */
 .header {
     text-align: center;
     margin-bottom: 30px;
 }
 
 .header img {
-    width: 130px;
+    width: 140px;
 }
 
 .header h1 {
@@ -60,32 +52,7 @@ body {
     color: #1b7d3c;
 }
 
-.info-grid {
-    display: table;
-    width: 100%;
-    margin-bottom: 30px;
-}
-
-.info-text {
-    display: table-cell;
-    width: 60%;
-    vertical-align: top;
-    padding-left: 20px;
-}
-
-.info-image {
-    text-align: center;
-    margin: 25px 0;
-}
-
-.image-box img {
-    width: 340px;
-    max-width: 100%;
-    height: auto;
-    object-fit: contain;
-    border-radius: 14px;
-}
-
+/* LABELS */
 .label {
     font-weight: bold;
     color: #1b7d3c;
@@ -96,6 +63,16 @@ body {
     margin-bottom: 12px;
 }
 
+/* IMAGE */
+.image-box img {
+    width: 220px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 14px;
+}
+
+/* TOTAL */
 .total-box {
     text-align: center;
     margin: 40px 0;
@@ -114,6 +91,7 @@ body {
     margin-bottom: 6px;
 }
 
+/* TABLES */
 .summary-table,
 .payments-table {
     width: 100%;
@@ -127,6 +105,7 @@ body {
     border: 1px solid #000;
     padding: 10px;
     text-align: center;
+    vertical-align: middle;
 }
 
 .summary-table th,
@@ -149,49 +128,51 @@ body {
 
 <!-- HEADER -->
 <div class="header">
-    <img src="{{ public_path('images/logo-jalili.jpg') }}">
     <h1>{{ $title }}</h1>
 </div>
 
-<!-- INFO -->
-<div class="info-grid">
-    <div class="info-text">
+<!-- INFO + IMAGE (SAFE PRINT LAYOUT) -->
+<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px;">
+    <tr>
+        <!-- INFO -->
+        <td width="60%" valign="top" style="padding-left:20px;">
+            <div class="label">رقم المحل</div>
+            <div class="value">{{ $shop->number }}</div>
 
-        <div class="label">رقم المحل</div>
-        <div class="value">{{ $shop->number }}</div>
+            <div class="label">العمارة</div>
+            <div class="value">{{ $shop->building_number }}</div>
 
-        <div class="label">العمارة</div>
-        <div class="value">{{ $shop->building_number }}</div>
+            <div class="label">المساحة</div>
+            <div class="value">{{ $shop->area }} م²</div>
 
-        <div class="label">المساحة</div>
-        <div class="value">{{ $shop->area }} م²</div>
+            <div class="label">ثمن المتر</div>
+            <div class="value">{{ money($shop->price_per_m2) }} درهم</div>
 
-        <div class="label">ثمن المتر</div>
-        <div class="value">{{ money($shop->price_per_m2) }} درهم</div>
+            @if($shop->mezzanine_area && $shop->mezzanine_area > 0)
+                <div class="label">MEZZANINE</div>
+                <div class="value">
+                    {{ $shop->mezzanine_area }} م² —
+                    {{ money($mezzaninePrice) }} درهم
+                </div>
+            @endif
 
-        @if($shop->mezzanine_area && $shop->mezzanine_area > 0)
-            <div class="label">MEZZANINE</div>
-            <div class="value">
-                {{ $shop->mezzanine_area }} م² —
-                {{ money($shop->mezzanine_total_price) }} درهم
+            <div class="label">حالة المحل</div>
+            <div class="value">{{ $shop->status }}</div>
+
+            <div class="label">صاحب المحل</div>
+            <div class="value">{{ $shop->customer_name ?? '—' }}</div>
+        </td>
+
+        <!-- IMAGE -->
+        @if($shop->image)
+        <td width="40%" valign="top" align="center">
+            <div class="image-box">
+                <img src="{{ url('storage/'.$shop->image) }}">
             </div>
+        </td>
         @endif
-
-        <div class="label">حالة المحل</div>
-        <div class="value">{{ $shop->status }}</div>
-
-        <div class="label">صاحب المحل</div>
-        <div class="value">{{ $shop->customer_name ?? '—' }}</div>
-    </div>
-
-    @if($shop->image)
-    <div class="info-image">
-        <div class="image-box">
-            <img src="{{ public_path('storage/'.$shop->image) }}">
-        </div>
-    </div>
-    @endif
-</div>
+    </tr>
+</table>
 
 <!-- TOTAL PRICE -->
 <div class="total-box">
@@ -201,7 +182,7 @@ body {
             ثمن المحل: {{ money($baseShopPrice) }} درهم
         </div>
         <div class="line">
-           MEZZANINE ثمن : {{ money($mezzaninePrice) }} درهم
+            ثمن MEZZANINE: {{ money($mezzaninePrice) }} درهم
         </div>
     @endif
 
@@ -218,7 +199,7 @@ body {
 
 <!-- PAYMENTS -->
 @if($payments->count())
-<div class="payments-title">تفاصيل الدفوعات</div>
+<div class="payments-title"> الدفوعات</div>
 
 <table class="payments-table">
     <thead>
@@ -262,5 +243,12 @@ body {
 @endif
 
 </div>
+
+<script>
+    window.onload = function () {
+        window.print();
+    };
+</script>
+
 </body>
 </html>

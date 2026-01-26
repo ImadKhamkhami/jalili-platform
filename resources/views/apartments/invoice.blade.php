@@ -120,11 +120,6 @@ body {
 
 <!-- HEADER -->
 <div class="header">
-    <img
-        src="{{ asset('images/logo-jalili.jpg') }}"
-        width="140"
-        style="display:block;margin:0 auto;"
-    >
     <h1>{{ $title }}</h1>
 </div>
 
@@ -196,7 +191,7 @@ body {
 
 <!-- PAYMENTS -->
 @if($payments->count())
-<div class="payments-title">تفاصيل الدفوعات</div>
+<div class="payments-title"> الدفوعات</div>
 
 <table class="payments-table">
     <thead>

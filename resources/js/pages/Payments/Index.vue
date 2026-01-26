@@ -128,16 +128,16 @@ function formatMoney(value) {
 
 <!-- ================== الفلاتر ================== -->
 <div class="bg-white rounded-2xl shadow p-5 mb-8">
-  <div  
+    <div  
     class="
       grid grid-cols-2 gap-x-4 gap-y-5
       md:grid-cols-3
-      lg:grid-cols-6
+      lg:grid-cols-8
     "
   >
 
     <!-- المشروع -->
-    <div class="col-span-2 lg:min-w-[180px] lg:flex-1">
+    <div class="min-w-[180px] flex-1">
       <label class="text-xs text-gray-500 mb-1 block">المشروع</label>
       <select v-model="filtersForm.project_id"
               class="w-full border rounded-xl px-3 py-2">
