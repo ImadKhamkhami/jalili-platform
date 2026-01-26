@@ -8,6 +8,7 @@ use App\Models\Shop;
 use App\Models\LandPlot;
 use App\Models\Project;
 use Carbon\Carbon;
+use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
@@ -332,7 +333,7 @@ public function store(Request $request)
         'paid_at'         => $validated['paid_at'],
     ]);
 
-    return redirect()->route('payments.index');
+    return Inertia::location('payments.index');
 }
 
     /* =====================================================
@@ -559,8 +560,7 @@ public function update(Request $request, Payment $payment)
 
     $payment->update($validated);
 
-    return redirect()->route('payments.index')
-        ->with('success', 'تم تعديل الدفعة بنجاح');
+    return Inertia::location('payments.index');
 }
 
 

@@ -152,10 +152,12 @@ public function index(Request $request)
 
         $project = Project::create($validated);
 
-      return redirect()->route('projects.index', [
-      'focus' => $project->id,
-      'type'  => $project->type, // مهم (building / lot)
-     ]);
+return Inertia::location(
+    route('projects.index', [
+        'focus' => $project->id,
+        'type'  => $project->type, // building / lot
+    ])
+);
 
     }
 
@@ -178,10 +180,12 @@ public function index(Request $request)
 
         $project->update($validated);
 
-        return redirect()->route('projects.index', [
-       'focus' => $project->id,
-       'type'  => $project->type, // مهم باش يفتح tab الصحيح
-      ]);
+return Inertia::location(
+    route('projects.index', [
+        'focus' => $project->id,
+        'type'  => $project->type, // مهم باش يفتح tab الصحيح
+    ])
+);
 
     }
 

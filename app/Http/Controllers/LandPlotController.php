@@ -251,7 +251,7 @@ public function byProject(Project $project)
         'customer_phone'  => $validated['customer_phone'] ?? null,
     ]);
 
-    return redirect()->to(
+    return Inertia::location(
         "/projects/{$validated['project_id']}/lands?focus-land={$land->id}"
     );
 }
@@ -474,7 +474,7 @@ public function update(Request $request, LandPlot $land)
         'customer_phone'  => $validated['customer_phone'] ?? null,
     ]);
 
-    return redirect()->to(
+    return Inertia::location(
         "/projects/{$validated['project_id']}/lands?focus-land={$land->id}"
     );
 }

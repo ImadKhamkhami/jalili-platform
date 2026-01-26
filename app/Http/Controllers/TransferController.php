@@ -261,9 +261,7 @@ public function index(Request $request)
             'customer_phone'  => $toCustomer->phone,
         ]);
 
-        return redirect()
-            ->route('transfers.index')
-            ->with('success', 'تم تسجيل التنازل وتحديث مالك الوحدة بنجاح');
+        return Inertia::location('transfers.index');
     }
 
     /* =========================================================
@@ -340,9 +338,7 @@ public function index(Request $request)
             'notes'          => $data['notes'],
         ]);
 
-        return redirect()
-            ->route('transfers.index')
-            ->with('success', 'تم تعديل التنازل بنجاح');
+        return Inertia::location('transfers.index');
     }
 
     /* =========================================================

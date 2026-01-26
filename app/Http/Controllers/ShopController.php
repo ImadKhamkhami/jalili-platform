@@ -211,7 +211,7 @@ public function store(Request $request)
         'customer_phone'  => $validated['customer_phone'] ?? null,
     ]);
 
-    return redirect()->to(
+    return Inertia::location(
         "/projects/{$validated['project_id']}/apartments"
         . "?building={$building->name}"
         . ($validated['tranche_number'] ? "&tranche={$validated['tranche_number']}" : "")
@@ -396,7 +396,7 @@ public function update(Request $request, Shop $shop)
     ]);
 
     /* ================= REDIRECT ================= */
-    return redirect()->to(
+    return Inertia::location(
         "/projects/{$validated['project_id']}/apartments"
         . "?building={$building->name}"
         . ($validated['tranche_number'] ? "&tranche={$validated['tranche_number']}" : "")

@@ -44,8 +44,7 @@ class UserController extends Controller
         // ربط الدور
         $user->assignRole($validated['role']);
 
-        return redirect()->route('users.index')
-            ->with('success', 'تم إنشاء المستخدم بنجاح');
+        return Inertia::location('users.index');
     }
 
     public function edit(User $user)
@@ -74,16 +73,15 @@ public function update(Request $request, User $user)
     $user->update($data);
     $user->syncRoles([$data['role']]);
 
-    return redirect()->route('users.index')
-        ->with('success', 'تم تحديث المستخدم بنجاح');
+    return Inertia::location('users.index');
 }
     public function destroy(User $user): RedirectResponse
     {
        if (Auth::id() === $user->id) {
-    return back()->withErrors([
+      return back()->withErrors([
         'delete' => 'لا يمكنك حذف حسابك الحالي',
-    ]);
-}
+      ]);
+     }
 
         $user->delete();
 
