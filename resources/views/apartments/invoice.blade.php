@@ -17,7 +17,6 @@
 @endphp
 
 <style>
-
 @page {
     margin: 15mm 12mm;
 }
@@ -40,8 +39,6 @@ body {
     text-align: center;
     margin-bottom: 30px;
 }
-
-
 
 .header h1 {
     margin-top: 10px;
@@ -109,23 +106,29 @@ body {
     margin: 35px 0 12px;
 }
 
+/* PRINT ONLY */
+@media print {
+    .no-print {
+        display: none;
+    }
+}
 </style>
 </head>
 
-<body>
+<body onload="window.print()">
 <div class="page">
 
 <!-- HEADER -->
 <div class="header">
-        <img 
-    src="{{ public_path('images/logo-jalili.jpg') }}"
-    width="140"
-    style="display:block;margin:0 auto;"
->
+    <img
+        src="{{ asset('images/logo-jalili.jpg') }}"
+        width="140"
+        style="display:block;margin:0 auto;"
+    >
     <h1>{{ $title }}</h1>
 </div>
 
-<!-- INFO + IMAGE (mPDF SAFE LAYOUT) -->
+<!-- INFO + IMAGE -->
 <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px;">
     <tr>
         <!-- INFO -->
@@ -145,7 +148,7 @@ body {
             <div class="value">
                 {{ $apartment->area }} م²
                 @if($apartment->has_terrace)
-                    | {{ $apartment->terrace_type }} {{ $apartment->terrace_area }} م² 
+                    | {{ $apartment->terrace_type }} {{ $apartment->terrace_area }} م²
                     – {{ money($apartment->terrace_total_price) }} درهم
                 @endif
             </div>
@@ -165,7 +168,7 @@ body {
         @if($apartment->image)
         <td width="40%" valign="top" align="center">
             <img
-                src="{{ public_path('storage/'.$apartment->image) }}"
+                src="{{ asset('storage/'.$apartment->image) }}"
                 width="220"
                 style="margin-top:10px;"
             >
@@ -244,4 +247,3 @@ body {
 </div>
 </body>
 </html>
-

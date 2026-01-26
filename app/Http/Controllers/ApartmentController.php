@@ -24,6 +24,34 @@ class ApartmentController extends Controller
     /* =====================================================
         PDF
     ===================================================== */
+public function invoicePrint(Apartment $apartment)
+{
+    $building = $apartment->building;
+    $project  = $building->project;
+    $tranche  = $apartment->tranche_number;
+
+    $title = "بيان الشقة {$apartment->number} – عمارة {$building->name}";
+    if ($tranche) $title .= " – الشطر {$tranche}";
+    $title .= " – إقامة {$project->name}";
+
+    $payments = Payment::where('context', 'apartment')
+        ->where('apartment_id', $apartment->id)
+        ->orderBy('paid_at')
+        ->get();
+
+    $paidTotal = $payments->sum('amount');
+    $remaining = max($apartment->total_price - $paidTotal, 0);
+
+    return view('apartments.invoice', compact(
+        'apartment',
+        'building',
+        'project',
+        'title',
+        'payments',
+        'paidTotal',
+        'remaining'
+    ));
+}
 
 
     /* =====================================================
