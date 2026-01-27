@@ -156,16 +156,16 @@
             <tbody>
             @foreach($shops as $row)
                 <tr>
-                    <td>{{ $row['number'] }}</td>
-                    <td>{{ $row['area'] }} م²</td>
-                    <td>{{ number_format($row['total_price'],2,',','.') }}</td>
-                    <td class="payments">
+                    <td class="font-bold">{{ $row['number'] }}</td>
+                    <td class="font-bold">{{ $row['area'] }} م²</td>
+                    <td class="font-bold">{{ number_format($row['total_price'],2,',','.') }}</td>
+                    <td class="payments font-bold">
                         @forelse($row['payments'] as $p)
                             {{ number_format($p['amount'],2,',','.') }} — {{ $p['date'] }}<br>
                         @empty — @endforelse
                     </td>
-                    <td>{{ number_format($row['paid'],2,',','.') }}</td>
-                    <td>{{ number_format($row['remaining'],2,',','.') }}</td>
+                    <td class="font-bold">{{ number_format($row['paid'],2,',','.') }}</td>
+                    <td class="font-bold">{{ number_format($row['remaining'],2,',','.') }}</td>
                 </tr>
             @endforeach
             </tbody>
@@ -189,21 +189,21 @@
             <tbody>
             @foreach($apartments as $row)
                 <tr>
-                    <td>{{ $row['number'] }}</td>
-                    <td>
+                    <td class="font-bold">{{ $row['number'] }}</td>
+                    <td class="font-bold">
                         {{ $row['area'] }} م²
                         @if(!empty($row['terrace']))
                             + {{ $row['terrace'] }} م²
                         @endif
                     </td>
-                    <td>{{ number_format($row['total_price'],2,',','.') }}</td>
-                    <td class="payments">
+                    <td class="font-bold">{{ number_format($row['total_price'],2,',','.') }}</td>
+                    <td class="payments font-bold">
                         @forelse($row['payments'] as $p)
                             {{ number_format($p['amount'],2,',','.') }} — {{ $p['date'] }}<br>
                         @empty — @endforelse
                     </td>
-                    <td>{{ number_format($row['paid'],2,',','.') }}</td>
-                    <td>{{ number_format($row['remaining'],2,',','.') }}</td>
+                    <td class="font-bold">{{ number_format($row['paid'],2,',','.') }}</td>
+                    <td class="font-bold">{{ number_format($row['remaining'],2,',','.') }}</td>
                 </tr>
             @endforeach
             </tbody>
@@ -226,16 +226,16 @@
             <tbody>
             @foreach($lands as $row)
                 <tr>
-                    <td>{{ $row['number'] }}</td>
-                    <td>{{ $row['area'] }} م²</td>
-                    <td>{{ number_format($row['total_price'],2,',','.') }}</td>
-                    <td class="payments">
+                    <td class="font-bold">{{ $row['number'] }}</td>
+                    <td class="font-bold">{{ $row['area'] }} م²</td>
+                    <td class="font-bold">{{ number_format($row['total_price'],2,',','.') }}</td>
+                    <td class="payments font-bold">
                         @forelse($row['payments'] as $p)
                             {{ number_format($p['amount'],2,',','.') }} — {{ $p['date'] }}<br>
                         @empty — @endforelse
                     </td>
-                    <td>{{ number_format($row['paid'],2,',','.') }}</td>
-                    <td>{{ number_format($row['remaining'],2,',','.') }}</td>
+                    <td class="font-bold">{{ number_format($row['paid'],2,',','.') }}</td>
+                    <td class="font-bold">{{ number_format($row['remaining'],2,',','.') }}</td>
                 </tr>
             @endforeach
             </tbody>
@@ -248,7 +248,7 @@
 <table class="total-project">
     <tr>
         <th>مجموع  دفوعات  {{ $project->name }}</th>
-        <th>{{ number_format($projectTotalPrice,2,',','.') }}</th>
+        <th>{{ number_format($projectPaid,2,',','.') }}</th>
     </tr>
 </table>
 
