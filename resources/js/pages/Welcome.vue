@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { router } from '@inertiajs/vue3'
 import { Head, Link } from '@inertiajs/vue3'
 
 withDefaults(
@@ -44,7 +45,7 @@ withDefaults(
 
       <!-- Login Button -->
       <Link
-        href="/login"
+        @click="router.visit('/login')"
         class="block w-full bg-[#0A5A55] hover:bg-[#074a45] text-white py-3.5 rounded-xl text-lg font-bold tracking-wide transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
       >
         الدخول إلى المنصة
