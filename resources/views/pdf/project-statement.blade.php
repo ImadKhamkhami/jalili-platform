@@ -50,6 +50,8 @@
         th, td {
             border: 1px solid #000;
             padding: 6px;
+            font-weight: bold;
+            font-size: 14px;
             text-align: center;
             vertical-align: middle;
         }
