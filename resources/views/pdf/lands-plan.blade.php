@@ -49,7 +49,7 @@
 
         .plan-table td {
             border: 2px solid #000;
-            height: 135px;
+            height: 120px;
             padding: 10px 8px;
             vertical-align: top;
             text-align: center;
