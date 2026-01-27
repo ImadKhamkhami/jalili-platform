@@ -43,10 +43,18 @@
         =================================================== */
         .plan-table {
             width: 100%;
-            page-break-inside: avoid;
             border-collapse: collapse;
             margin-bottom: 40px;
         }
+
+        .plan-table tr {
+        page-break-inside: avoid;
+        }
+
+        .plan-table td {
+         page-break-inside: avoid;
+        }
+
 
         .plan-table td {
             border: 2px solid #000;
