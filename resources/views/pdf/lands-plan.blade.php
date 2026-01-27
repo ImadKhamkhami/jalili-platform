@@ -51,8 +51,6 @@
         .plan-table td {
             border: 2px solid #000;
             height: 118px;
-            .page-break-inside: avoid;
-             break-inside: avoid;
             padding: 10px 8px;
             vertical-align: top;
             text-align: center;
