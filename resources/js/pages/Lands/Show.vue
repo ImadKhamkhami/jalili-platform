@@ -277,7 +277,7 @@ function remove() {
             class="ml-2 px-2 py-0.5 text-xs rounded-full
                    bg-green-600 text-white"
           >
-            المالك الحالي
+            المالك 
           </span>
         </td>
 
