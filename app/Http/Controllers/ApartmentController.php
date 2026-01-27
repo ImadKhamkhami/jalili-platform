@@ -657,30 +657,32 @@ public function update(Request $request, Apartment $apartment)
         DELETE
     
     ===================================================== */
-    public function destroy(Apartment $apartment)
+public function destroy(Apartment $apartment)
 {
-
-
-
     DB::transaction(function () use ($apartment) {
 
-        // حذف دفوعات الشقة
+        // 🧾 حذف التنازلات المرتبطة بالشقة
+        \App\Models\Transfer::where('context', 'apartment')
+            ->where('unit_id', $apartment->id)
+            ->delete();
+
+        // 💰 حذف دفوعات الشقة
         Payment::where('context', 'apartment')
             ->where('apartment_id', $apartment->id)
             ->delete();
 
-        // حذف الشقة
+        // 🏠 حذف الشقة
         $apartment->delete();
     });
 
     $projectId = $apartment->building->project_id;
     $building  = $apartment->building->name;
     $id        = $apartment->id;
-    
-    session()->flash('success', 'تم حذف الشقة ودفوعاتها بنجاح');
+
     return redirect(
         "/projects/{$projectId}/apartments?building={$building}&focus-deleted={$id}"
-    )->with('success', 'تم حذف الشقة ودفوعاتها بنجاح');
+    )->with('success', 'تم حذف الشقة ودفوعاتها وتنازلاتها بنجاح');
 }
+
 
 }

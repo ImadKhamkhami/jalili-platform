@@ -9,6 +9,8 @@ use App\Models\Payment;
 use App\Models\Building;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\Transfer;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -495,30 +497,36 @@ public function show(Shop $shop)
     /* =====================================================
        DELETE
     ===================================================== */
-    public function destroy(Shop $shop)
-    {
+public function destroy(Shop $shop)
+{
+    $shop->load('building.project');
 
+    $project  = $shop->building->project;
+    $building = $shop->building;
+    $tranche  = $shop->tranche_number;
+    $id       = $shop->id;
 
+    DB::transaction(function () use ($shop) {
 
+        // 🧾 حذف التنازلات المرتبطة بالمحل
+        Transfer::where('context', 'shop')
+            ->where('unit_id', $shop->id)
+            ->delete();
 
-        $shop->load('building.project');
+        // 💰 حذف دفوعات المحل
+        Payment::where('context', 'shop')
+            ->where('shop_id', $shop->id)
+            ->delete();
 
-        $project  = $shop->building->project;
-        $building = $shop->building;
-        $tranche  = $shop->tranche_number;
-        $id       = $shop->id;
-
-         Payment::where('context', 'shop')
-        ->where('shop_id', $shop->id)
-        ->delete();
-
+        // 🏬 حذف المحل
         $shop->delete();
+    });
 
-        return redirect()->to(
-            "/projects/{$project->id}/apartments"
-            . "?building={$building->name}"
-            . ($tranche ? "&tranche={$tranche}" : "")
-            . "&focus-deleted={$id}"
-        );
-    }
+    return redirect()->to(
+        "/projects/{$project->id}/apartments"
+        . "?building={$building->name}"
+        . ($tranche ? "&tranche={$tranche}" : "")
+        . "&focus-deleted={$id}"
+    )->with('success', 'تم حذف المحل ودفوعاته وتنازلاته بنجاح');
+}
 }

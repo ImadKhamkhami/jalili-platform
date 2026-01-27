@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 
 
@@ -488,19 +489,30 @@ public function update(Request $request, LandPlot $land)
     /* -------------------------------------------------------
         DELETE
     ------------------------------------------------------- */
-    public function destroy(LandPlot $land)
-    {
-        $projectId = $land->project_id;
-        $id = $land->id;
+public function destroy(LandPlot $land)
+{
+    DB::transaction(function () use ($land) {
 
+        // 🧾 حذف التنازلات المرتبطة بالقطعة
+        \App\Models\Transfer::where('context', 'land')
+            ->where('unit_id', $land->id)
+            ->delete();
+
+        // 💰 حذف دفوعات القطعة
         Payment::where('context', 'land')
-        ->where('land_id', $land->id)
-        ->delete();
+            ->where('land_id', $land->id)
+            ->delete();
 
+        // 🌍 حذف القطعة
         $land->delete();
+    });
 
-        return redirect(
-            "/projects/{$projectId}/lands?focus-deleted={$id}"
-        );
-    }
+    $projectId = $land->project_id;
+    $id = $land->id;
+
+    return redirect(
+        "/projects/{$projectId}/lands?focus-deleted={$id}"
+    )->with('success', 'تم حذف القطعة ودفوعاتها وتنازلاتها بنجاح');
+}
+
 }
