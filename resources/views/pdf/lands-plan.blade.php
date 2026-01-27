@@ -18,6 +18,13 @@
             font-size: 22px;
             font-weight: bold;
         }
+        /* 🔴 القطع المحجوزة */
+.reserved-underline {
+    display: inline-block;
+    padding-bottom: 2px;
+    border-bottom: 3px solid #c62828;
+}
+
 
         /* ===================== الإحصائيات ===================== */
         .stats-row {
@@ -170,13 +177,20 @@
             @endphp
 
             <td>
-                <div class="land-title">
-                    @if($land->status === 'مباعة')
-                        <span class="sold-badge">قطعة {{ $land->land_number }}</span>
-                    @else
-                        قطعة {{ $land->land_number }}
-                    @endif
-                </div>
+<div class="land-title">
+    @if($land->status === 'مباعة')
+        <span class="sold-badge">قطعة {{ $land->land_number }}</span>
+
+    @elseif($land->status === 'محجوزة')
+        <span class="reserved-underline">
+            قطعة {{ $land->land_number }}
+        </span>
+
+    @else
+        قطعة {{ $land->land_number }}
+    @endif
+</div>
+
 
                 <div class="info">
                     <strong>{{ $land->area }}</strong> م²
