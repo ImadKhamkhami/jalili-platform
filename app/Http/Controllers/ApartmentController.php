@@ -60,8 +60,9 @@ public function invoicePrint(Apartment $apartment)
 public function index()
 {
     $apartments = Apartment::with('building.project')
-        ->get()
-        ->map(function ($apartment) {
+    ->orderByDesc('id') // ✅ مهم
+    ->get()
+    ->map(function ($apartment) {
 
             $paid = Payment::where('context', 'apartment')
                 ->where('apartment_id', $apartment->id)
@@ -78,8 +79,9 @@ public function index()
         });
 
     $shops = Shop::with('building.project')
-        ->get()
-        ->map(function ($shop) {
+    ->orderByDesc('id') // ✅ مهم
+    ->get()
+    ->map(function ($shop) {
 
             $paid = Payment::where('context', 'shop')
                 ->where('shop_id', $shop->id)
@@ -109,11 +111,12 @@ public function index()
     public function byProject(Project $project)
 {
     $apartments = Apartment::with('building.project')
-        ->whereHas('building', fn ($q) =>
-            $q->where('project_id', $project->id)
-        )
-        ->get()
-        ->map(function ($apartment) {
+    ->whereHas('building', fn ($q) =>
+        $q->where('project_id', $project->id)
+    )
+    ->orderByDesc('id') // ✅ نفس الترتيب
+    ->get()
+    ->map(function ($apartment) {
 
             $paid = Payment::where('context', 'apartment')
                 ->where('apartment_id', $apartment->id)
@@ -132,11 +135,12 @@ public function index()
         });
 
     $shops = Shop::with('building.project')
-        ->whereHas('building', fn ($q) =>
-            $q->where('project_id', $project->id)
-        )
-        ->get()
-        ->map(function ($shop) {
+    ->whereHas('building', fn ($q) =>
+        $q->where('project_id', $project->id)
+    )
+    ->orderByDesc('id') // ✅ نفس الترتيب
+    ->get()
+    ->map(function ($shop) {
 
             $paid = Payment::where('context', 'shop')
                 ->where('shop_id', $shop->id)
@@ -161,8 +165,6 @@ public function index()
         'shops' => $shops,
     ]);
 }
-
-
 
     /* =====================================================
         SHOW

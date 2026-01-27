@@ -97,8 +97,9 @@ private function getLandsWithPayments(Project $project)
 public function index()
 {
     $projects = Project::where('type', 'lot')
-        ->orderBy('name')
-        ->get();
+    ->orderByDesc('id')
+    ->get()
+    ->values();
 
     $currentProject = $projects->first();
 
@@ -123,11 +124,16 @@ public function index()
 public function byProject(Project $project)
 {
     return Inertia::render('Lands/Index', [
-        'projects'        => Project::where('type', 'lot')->orderBy('name')->get(),
+        'projects' => Project::where('type', 'lot')
+            ->orderByDesc('id') // ✅ نفس الترتيب
+            ->get()
+            ->values(),
+
         'current_project' => $project,
         'lands'           => $this->getLandsWithPayments($project),
     ]);
 }
+
 
     /* -------------------------------------------------------
         CREATE

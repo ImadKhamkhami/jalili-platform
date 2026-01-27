@@ -4,6 +4,8 @@ import { ref, onMounted, computed } from "vue";
 import { router } from "@inertiajs/vue3";
 
 
+
+
 function printLandPlan(projectId) {
     window.open(`/projects/${projectId}/lands/plan/pdf`, '_blank')
 }
@@ -131,7 +133,7 @@ onMounted(() => {
     </div>
         </div>
         <!-- ================= PROJECT TABS (نفس الشقق) ================= -->
-        <div v-if="hasProjects" class="flex gap-6 border-b pb-2 mb-6 font-bold">
+                 <div v-if="hasProjects" class="flex gap-6 border-b pb-2 mb-6 font-bold">
             <button
                 v-for="p in projectList"
                 :key="p.id"
@@ -144,6 +146,7 @@ onMounted(() => {
                 {{ p.name }}
             </button>
         </div>
+
 
         <!-- ================= EMPTY ================= -->
         <div
