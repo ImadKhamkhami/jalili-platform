@@ -24,7 +24,7 @@
         }
 
         .half {
-            height: 138mm; /* ✅ نصف الصفحة فعليًا */
+            height: 130mm; /* ✅ نصف الصفحة فعليًا */
             border: 1px solid #000;
             padding: 18px;
             box-sizing: border-box;
@@ -79,7 +79,7 @@
 
         table.signatures {
             width: 100%;
-            margin-top: 28mm;
+            margin-top: 20mm;
         }
 
         table.signatures td {
@@ -94,21 +94,14 @@
 @php
 function unitDescription($payment) {
     if ($payment->context === 'apartment') {
-        return 'شقة رقم ' . $payment->apartment->number
-            . ' – عمارة ' . $payment->building_number
-            . ($payment->tranche_number ? ' – شطر ' . $payment->tranche_number : '');
+        return 'شقة رقم ' . $payment->apartment->number;
     }
-
     if ($payment->context === 'shop') {
-        return 'محل رقم ' . $payment->shop->number
-            . ' – عمارة ' . $payment->building_number
-            . ($payment->tranche_number ? ' – شطر ' . $payment->tranche_number : '');
+        return 'محل رقم ' . $payment->shop->number;
     }
-
     if ($payment->context === 'land') {
         return 'قطعة رقم ' . $payment->land->land_number;
     }
-
     return '—';
 }
 @endphp
@@ -117,52 +110,38 @@ function unitDescription($payment) {
 <div class="half">
 
     <div class="logo">
-        <img src="{{ public_path('images/jalili-logo.png') }}">
+        <img src="{{ asset('images/jalili-logo.png') }}">
     </div>
 
-    <div class="receipt-title">توصيل </div>
+    <div class="receipt-title">توصيل</div>
 
     <table class="info">
         <tr>
-            <td class="label">المشروع :</td>
+            <td class="label">المشروع</td>
             <td class="value">{{ $payment->project->name }}</td>
-
-            <td class="label"> الوحدة :</td>
+            <td class="label">الوحدة</td>
             <td class="value">{{ unitDescription($payment) }}</td>
         </tr>
 
         <tr>
-            <td class="label">المبلغ :</td>
-            <td class="amount">
-                {{ number_format($payment->amount, 2, ',', '.') }} درهم
-            </td>
-
-            <td class="label">طريقة الدفع :</td>
+            <td class="label">المبلغ</td>
+            <td class="amount">{{ number_format($payment->amount, 2, ',', '.') }} درهم</td>
+            <td class="label">طريقة الدفع</td>
             <td class="value">{{ $payment->payment_method }}</td>
         </tr>
 
         <tr>
-            <td class="label">التاريخ :</td>
-            <td class="value">
-                {{ \Carbon\Carbon::parse($payment->paid_at)->format('Y-m-d') }}
-            </td>
-            <td class="label"> رقم التوصيل:</td>
-            <td class="value">
-                {{ $payment->receipt_number }}
-            </td>
+            <td class="label">التاريخ</td>
+            <td class="value">{{ \Carbon\Carbon::parse($payment->paid_at)->format('Y-m-d') }}</td>
+            <td class="label">رقم التوصيل</td>
+            <td class="value">{{ $payment->receipt_number }}</td>
         </tr>
     </table>
 
     <table class="signatures">
         <tr>
-            <td>
-                توقيع الزبون<br><br>
-                ------------------------
-            </td>
-            <td>
-                توقيع الإدارة<br><br>
-                ------------------------
-            </td>
+            <td>توقيع الزبون<br><br>------------------------</td>
+            <td>توقيع الإدارة<br><br>------------------------</td>
         </tr>
     </table>
 </div>
@@ -173,55 +152,46 @@ function unitDescription($payment) {
 <div class="half">
 
     <div class="logo">
-        <img src="{{ public_path('images/jalili-logo.png') }}">
+        <img src="{{ asset('images/jalili-logo.png') }}">
     </div>
 
-    <div class="receipt-title">توصيل </div>
+    <div class="receipt-title">توصيل</div>
 
     <table class="info">
         <tr>
             <td class="label">المشروع</td>
             <td class="value">{{ $payment->project->name }}</td>
-
             <td class="label">الوحدة</td>
             <td class="value">{{ unitDescription($payment) }}</td>
         </tr>
 
         <tr>
             <td class="label">المبلغ</td>
-            <td class="amount">
-                {{ number_format($payment->amount, 2, ',', '.') }} درهم
-            </td>
-
+            <td class="amount">{{ number_format($payment->amount, 2, ',', '.') }} درهم</td>
             <td class="label">طريقة الدفع</td>
             <td class="value">{{ $payment->payment_method }}</td>
         </tr>
 
         <tr>
             <td class="label">التاريخ</td>
-            <td class="value">
-                {{ \Carbon\Carbon::parse($payment->paid_at)->format('Y-m-d') }}
-            </td>
-            <td class="label"> رقم التوصيل:</td>
-            <td class="value">
-                {{ $payment->receipt_number }}
-            </td>
+            <td class="value">{{ \Carbon\Carbon::parse($payment->paid_at)->format('Y-m-d') }}</td>
+            <td class="label">رقم التوصيل</td>
+            <td class="value">{{ $payment->receipt_number }}</td>
         </tr>
     </table>
 
     <table class="signatures">
         <tr>
-            <td>
-                توقيع الزبون<br><br>
-                ------------------------
-            </td>
-            <td>
-                توقيع الإدارة<br><br>
-                ------------------------
-            </td>
+            <td>توقيع الزبون<br><br>------------------------</td>
+            <td>توقيع الإدارة<br><br>------------------------</td>
         </tr>
     </table>
 </div>
+
+<!-- 🖨️ طباعة تلقائية -->
+<script>
+    window.onload = () => window.print();
+</script>
 
 </body>
 </html>

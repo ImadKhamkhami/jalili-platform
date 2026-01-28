@@ -7,6 +7,7 @@ use App\Models\Project;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Transfer;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -54,17 +55,49 @@ public function invoicePrint(LandPlot $land)
     /* -------------------------------------------------------
         طباعة المخطط
     ------------------------------------------------------- */
+
+
+
 public function printPlan(Project $project)
 {
     $lands = LandPlot::where('project_id', $project->id)
         ->orderByRaw('CAST(land_number AS UNSIGNED) ASC')
-        ->get();
+        ->get()
+        ->map(function ($land) {
 
-    return view('pdf.lands-plan', [
-        'project' => $project,
-        'lands'   => $lands,
-    ]);
+            // المالك الحالي
+            $owners = collect();
+
+            if ($land->customer_name) {
+                $owners->push([
+                    'name'    => $land->customer_name,
+                    'current' => true,
+                ]);
+            }
+
+            // الملاك السابقون من التنازلات
+            $previousOwners = \App\Models\Transfer::where('context', 'land')
+                ->where('unit_id', $land->id)
+                ->orderBy('transfer_date', 'desc')
+                ->with('fromCustomer')
+                ->get()
+                ->map(function ($t) {
+                    return [
+                        'name'    => optional($t->fromCustomer)->name,
+                        'current' => false,
+                    ];
+                });
+
+            $land->owners_history = $owners->merge($previousOwners);
+
+            return $land;
+        });
+
+    return view('pdf.lands-plan', compact('project', 'lands'));
 }
+
+
+
 
 
 private function getLandsWithPayments(Project $project)

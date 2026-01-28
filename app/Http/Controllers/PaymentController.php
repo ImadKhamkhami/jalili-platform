@@ -167,21 +167,16 @@ public function print(Request $request)
     /* =====================================================
      * طباعة التوصيل
      * ===================================================== */
-   public function receipt(Payment $payment)
-  {
-        $payment->load(['project', 'apartment', 'shop', 'land']);
+public function receipt(Payment $payment)
+{
+    $payment->load(['project', 'apartment', 'shop', 'land']);
 
-        return PDF::loadView('payments.receipt', [
+return view('payments.receipt', [
     'payment' => $payment,
-     ])
-      ->setPaper('a4', 'portrait')
-      ->setOption('encoding', 'UTF-8')
-      ->setOption('margin-top', 10)
-      ->setOption('margin-bottom', 10)
-      ->setOption('margin-left', 10)
-      ->setOption('margin-right', 10)
-      ->inline('receipt.pdf');
-  }
+]);
+
+}
+
     /* =====================================================
      * INDEX
      * ===================================================== */

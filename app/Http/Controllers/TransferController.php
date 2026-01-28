@@ -370,14 +370,11 @@ public function restoreOwnership(Transfer $transfer)
 }
 
 
-
 public function print(Transfer $transfer)
 {
     $transfer->load([
         'fromCustomer',
         'toCustomer',
-
-        // تحميل العلاقات حسب النوع
         'apartment.building.project.company',
         'shop.building.project.company',
         'land.project.company',
@@ -396,19 +393,13 @@ public function print(Transfer $transfer)
 
     $company = $project->company;
 
-    return PDF::loadView(
-        'pdf.transfer',
-        compact('transfer', 'project', 'company')
-    )
-    ->setPaper('a4')
-    ->setOrientation('portrait')
-    ->setOption('encoding', 'UTF-8')
-    ->setOption('margin-top', 15)
-    ->setOption('margin-bottom', 15)
-    ->setOption('margin-left', 20)
-    ->setOption('margin-right', 20)
-    ->inline('تنازل.pdf');
+    return view('pdf.transfer', [
+        'transfer' => $transfer,
+        'project'  => $project,
+        'company'  => $company,
+    ]);
 }
+
 
     /* =========================================================
      | حذف تنازل

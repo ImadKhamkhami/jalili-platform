@@ -25,6 +25,18 @@
     border-bottom: 3px solid #c62828;
 }
 
+.current-owner {
+    color: #000000;
+    font-weight: bold;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.previous-owner {
+    color: #424040;
+    font-size: 12px;
+    display: block;
+}
 
         /* ===================== الإحصائيات ===================== */
         .stats-row {
@@ -61,7 +73,6 @@
         .plan-table td {
          page-break-inside: avoid;
         }
-
 
         .plan-table td {
             border: 2px solid #000;
@@ -190,8 +201,6 @@
         قطعة {{ $land->land_number }}
     @endif
 </div>
-
-
                 <div class="info">
                     <strong>{{ $land->area }}</strong> م²
                     &nbsp;—&nbsp;
@@ -200,11 +209,24 @@
                     <strong>{{ $facadeLabel }}</strong>
                 </div>
 
-                @if(!empty($land->customer_name))
-                    <div class="owner">
-                        {{ $land->customer_name }}
-                    </div>
-                @endif
+@if($land->owners_history->count())
+    <div class="owner">
+        @foreach($land->owners_history as $owner)
+            @if($owner['current'])
+                <span class="current-owner">
+                    {{ $owner['name'] }}
+                </span>
+            @else
+                <span class="previous-owner">
+                    {{ $owner['name'] }}
+                </span>
+            @endif
+        @endforeach
+    </div>
+@endif
+
+
+
             </td>
 
         @endforeach
