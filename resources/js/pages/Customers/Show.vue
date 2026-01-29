@@ -36,6 +36,19 @@ function printResults() {
   window.open(`/customers/${props.customer.id}/print?${query}`, '_blank')
 }
 
+
+function money(v) {
+  return formatMoney(v)
+}
+
+function paid(u) {
+  return u.total_paid ?? 0
+}
+
+function remaining(u) {
+  return (u.total_price ?? 0) - (u.total_paid ?? 0)
+}
+
 /* ================== تقسيم الوحدات ================== */
 const apartments = computed(() =>
   props.units.filter(u => u.context === 'apartment')
@@ -242,7 +255,7 @@ const activeTab = ref('apartment')
   </div>
 
 </section>
-<section v-if="activeTab==='shop' && shop.length">
+<section v-if="activeTab==='shop' && shops.length">
         <div class="bg-white rounded-2xl shadow overflow-hidden">
           <table class="w-full text-sm">
             <thead class="bg-gray-50">
@@ -298,7 +311,6 @@ const activeTab = ref('apartment')
           </table>
         </div>
 </section>
-<!-- نفس المنطق للمحلات والقطع ✔️ -->
 
 </div>
 </AppLayout>
