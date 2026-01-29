@@ -33,7 +33,7 @@
 }
 
 .previous-owner {
-    color: #424040;
+    color: #8a2525;
     font-size: 11px;
     display: block;
 }
