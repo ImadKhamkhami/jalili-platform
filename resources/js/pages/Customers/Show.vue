@@ -242,7 +242,62 @@ const activeTab = ref('apartment')
   </div>
 
 </section>
-
+<section v-if="activeTab==='shop' && shop.length">
+        <div class="bg-white rounded-2xl shadow overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-3">المشروع</th>
+                <th class="px-4 py-3">العمارة</th>
+                <th class="px-4 py-3">رقم</th>
+                <th class="px-4 py-3">الثمن</th>
+                <th class="px-4 py-3">المدفوع</th>
+                <th class="px-4 py-3">المتبقي</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="u in shops" :key="u.id" class="border-t">
+                <td class="px-4 py-3">{{ u.project_name }}</td>
+                <td class="px-4 py-3">{{ u.building_number }}</td>
+                <td class="px-4 py-3">{{ u.number }}</td>
+                <td class="px-4 py-3">{{ money(u.total_price) }}</td>
+                <td class="px-4 py-3 text-green-600">{{ money(paid(u)) }}</td>
+                <td class="px-4 py-3 text-red-600 font-semibold">{{ money(remaining(u)) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+</section>
+<section v-if="activeTab==='land' && lands.length">
+        <div class="bg-white rounded-2xl shadow overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-3">المشروع</th>
+                <th class="px-4 py-3">رقم القطعة</th>
+                <th class="px-4 py-3">الطريق / الواجهة</th>
+                <th class="px-4 py-3">الثمن</th>
+                <th class="px-4 py-3">المدفوع</th>
+                <th class="px-4 py-3">المتبقي</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="u in lands" :key="u.id" class="border-t">
+                <td class="px-4 py-3">{{ u.project_name }}</td>
+                <td class="px-4 py-3 font-semibold">{{ u.land_number }}</td>
+                <td class="px-4 py-3">
+                  <span class="px-3 py-1 bg-gray-100 rounded-full">
+                    {{ u.road_view }}
+                  </span>
+                </td>
+                <td class="px-4 py-3">{{ money(u.total_price) }}</td>
+                <td class="px-4 py-3 text-green-600">{{ money(paid(u)) }}</td>
+                <td class="px-4 py-3 text-red-600 font-semibold">{{ money(remaining(u)) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+</section>
 <!-- نفس المنطق للمحلات والقطع ✔️ -->
 
 </div>
