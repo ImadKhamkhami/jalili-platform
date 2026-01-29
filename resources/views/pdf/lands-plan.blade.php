@@ -60,11 +60,12 @@
         /* ===================================================
            مخطط القطع
         =================================================== */
-        .plan-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 40px;
-        }
+.plan-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+    table-layout: fixed;
+}
 
         .plan-table tr {
         page-break-inside: avoid;
@@ -74,13 +75,15 @@
          page-break-inside: avoid;
         }
 
-        .plan-table td {
-            border: 2px solid #000;
-            height: 118px;
-            padding: 10px 8px;
-            vertical-align: top;
-            text-align: center;
-        }
+.plan-table td {
+    border: 2px solid #000;
+    height: 118px;
+    padding: 10px 8px;
+    vertical-align: top;
+    text-align: center;
+    width: 25%;
+    overflow: hidden;
+}
 
         .land-title {
             font-size: 17px;
