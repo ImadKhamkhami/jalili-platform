@@ -296,16 +296,16 @@ const activeTab = ref('apartment')
             </thead>
             <tbody>
               <tr v-for="u in lands" :key="u.id" class="border-t">
-                <td class="px-4 py-3">{{ u.project_name }}</td>
+                <td class="px-4 py-3 font-bold">{{ u.project_name }}</td>
                 <td class="px-4 py-3 font-semibold">{{ u.land_number }}</td>
-                <td class="px-4 py-3">
-                  <span class="px-3 py-1 bg-gray-100 rounded-full">
+                <td class="px-4 py-3 font-bold">
+                  <span class="px-3 py-1 bg-gray-100 rounded-full ">
                     {{ u.road_view }}
                   </span>
                 </td>
-                <td class="px-4 py-3">{{ money(u.total_price) }}</td>
-                <td class="px-4 py-3 text-green-600">{{ money(paid(u)) }}</td>
-                <td class="px-4 py-3 text-red-600 font-semibold">{{ money(remaining(u)) }}</td>
+                <td class="px-4 py-3 font-bold">{{ money(u.total_price) }}</td>
+                <td class="px-4 py-3 text-green-600 font-bold">{{ money(paid(u)) }}</td>
+                <td class="px-4 py-3 text-red-600 font-bold">{{ money(remaining(u)) }}</td>
               </tr>
             </tbody>
           </table>
