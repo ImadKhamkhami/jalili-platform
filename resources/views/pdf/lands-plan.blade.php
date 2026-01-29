@@ -34,7 +34,7 @@
 
 .previous-owner {
     color: #424040;
-    font-size: 12px;
+    font-size: 11px;
     display: block;
 }
 
@@ -179,7 +179,7 @@
 
 {{-- ===================== مخطط القطع ===================== --}}
 <table class="plan-table">
-@foreach($lands->chunk(5) as $row)
+@foreach($lands->chunk(4) as $row)
     <tr>
         @foreach($row as $land)
 
