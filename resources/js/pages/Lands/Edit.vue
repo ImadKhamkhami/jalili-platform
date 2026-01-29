@@ -158,7 +158,7 @@ function submit() {
 
             <div>
               <label>المشروع</label>
-              <select v-model="form.project_id" class="border rounded-xl p-3 w-full">
+              <select v-model="form.project_id" class="border rounded-xl p-3 w-full font-bold">
                 <option v-for="p in projects" :key="p.id" :value="p.id">
                   {{ p.name }}
                 </option>
@@ -170,17 +170,17 @@ function submit() {
 
             <div>
               <label>رقم القطعة</label>
-              <input v-model="form.land_number" class="border rounded-xl p-3 w-full" />
+              <input v-model="form.land_number" class="border rounded-xl p-3 w-full font-bold" />
             </div>
 
             <div>
               <label>نوع الطريق</label>
-              <input v-model="form.road_type" class="border rounded-xl p-3 w-full" />
+              <input v-model="form.road_type" class="border rounded-xl p-3 w-full font-bold" />
             </div>
 
             <div>
               <label>الواجهة</label>
-              <select v-model="form.view_type" class="border rounded-xl p-3 w-full">
+              <select v-model="form.view_type" class="border rounded-xl p-3 w-full font-bold">
                 <option value="1-FACADE">1-FACADE</option>
                 <option value="2-FACADE">2-FACADE</option>
               </select>
@@ -188,17 +188,17 @@ function submit() {
 
             <div>
               <label>المساحة (م²)</label>
-              <input v-model="form.area" type="number" class="border rounded-xl p-3 w-full" />
+              <input v-model="form.area" type="number" class="border rounded-xl p-3 w-full font-bold" />
             </div>
 
             <div>
               <label>ثمن المتر</label>
-              <input v-model="form.price_per_m2" type="number" class="border rounded-xl p-3 w-full" />
+              <input v-model="form.price_per_m2" type="number" class="border rounded-xl p-3 w-full font-bold" />
             </div>
 
             <div>
               <label>الحالة</label>
-              <select v-model="form.status" class="border rounded-xl p-3 w-full">
+              <select v-model="form.status" class="border rounded-xl p-3 w-full font-bold">
                 <option value="متاحة">متاحة</option>
                 <option value="محجوزة">محجوزة</option>
                 <option value="مباعة">مباعة</option>
@@ -211,9 +211,9 @@ function submit() {
           <div>
             <h3 class="font-bold">صاحب القطعة</h3>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <input v-model="form.customer_name" placeholder="الاسم" class="border rounded-xl p-3" />
-              <input v-model="form.customer_id" placeholder="رقم التعريف" class="border rounded-xl p-3" />
-              <input v-model="form.customer_phone" placeholder="الهاتف" class="border rounded-xl p-3" />
+              <input v-model="form.customer_name" placeholder="الاسم" class="border rounded-xl p-3 font-bold" />
+              <input v-model="form.customer_id" placeholder="رقم التعريف" class="border rounded-xl p-3 font-bold" />
+              <input v-model="form.customer_phone" placeholder="الهاتف" class="border rounded-xl p-3 font-bold" />
             </div>
           </div>
         </div>
@@ -221,7 +221,7 @@ function submit() {
         <!-- STEP 2 -->
         <div v-show="activeStep === 2">
           <label>قيمة التخفيض</label>
-          <input v-model="form.discount" type="number" class="border rounded-xl p-3 w-full max-w-sm" />
+          <input v-model="form.discount" type="number" class="border rounded-xl p-3 w-full max-w-sm font-bold" />
         </div>
 
       </div>
