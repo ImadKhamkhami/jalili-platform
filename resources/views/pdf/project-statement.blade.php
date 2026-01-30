@@ -217,8 +217,9 @@
         <table>
             <thead>
                 <tr>
-                    <th>رقم القطعة</th>
-                    <th>المساحة</th>
+                    <th>N°</th>
+                    <th>مساحة</th>
+                    <th>التخفيض</th>
                     <th>الثمن الإجمالي</th>
                     <th>الدفعات</th>
                     <th>المدفوع</th>
@@ -230,6 +231,7 @@
                 <tr>
                     <td class="font-bold">{{ $row['number'] }}</td>
                     <td class="font-bold">{{ $row['area'] }} م²</td>
+                    <td>{{ number_format($row['discount'],2,',','.') }}</td>
                     <td class="font-bold">{{ number_format($row['total_price'],2,',','.') }}</td>
                     <td class="payments font-bold">
                         @forelse($row['payments'] as $p)

@@ -10,7 +10,7 @@ use App\Models\Customer;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
+use Illuminate\Support\Facades\DB;
 
 class TransferController extends Controller
 {
@@ -204,25 +204,28 @@ public function index(Request $request)
     /* =========================================================
      | تخزين التنازل
      ========================================================= */
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'context'          => 'required|in:apartment,shop,land',
-            'unit_id'          => 'required|integer',
-            'from_customer_id' => 'required|exists:customers,id',
 
-            'to_name'        => 'required|string|max:255',
-            'to_national_id' => 'required|string|max:50',
-            'to_phone'       => 'nullable|string|max:50',
+public function store(Request $request)
+{
+    $data = $request->validate([
+        'context'          => 'required|in:apartment,shop,land',
+        'unit_id'          => 'required|integer',
+        'from_customer_id' => 'required|exists:customers,id',
 
-            'transfer_date' => 'required|date',
-            'notes'         => 'nullable|string',
-        ]);
+        'to_name'        => 'required|string|max:255',
+        'to_national_id' => 'required|string|max:50',
+        'to_phone'       => 'nullable|string|max:50',
+
+        'transfer_date' => 'required|date',
+        'notes'         => 'nullable|string',
+    ]);
+
+    DB::transaction(function () use ($data) {
 
         $unit = match ($data['context']) {
-            'apartment' => Apartment::findOrFail($data['unit_id']),
-            'shop'      => Shop::findOrFail($data['unit_id']),
-            'land'      => LandPlot::findOrFail($data['unit_id']),
+            'apartment' => Apartment::lockForUpdate()->findOrFail($data['unit_id']),
+            'shop'      => Shop::lockForUpdate()->findOrFail($data['unit_id']),
+            'land'      => LandPlot::lockForUpdate()->findOrFail($data['unit_id']),
         };
 
         if ($unit->customer_ref_id != $data['from_customer_id']) {
@@ -255,14 +258,16 @@ public function index(Request $request)
             'notes'            => $data['notes'],
         ]);
 
+        // ✅ تحديث المالك الحالي فقط
         $unit->update([
             'customer_ref_id' => $toCustomer->id,
             'customer_name'   => $toCustomer->name,
             'customer_phone'  => $toCustomer->phone,
         ]);
+    });
 
-        return Inertia::location(route('transfers.index'));
-    }
+    return Inertia::location(route('transfers.index'));
+}
 
     /* =========================================================
      | تعديل تنازل

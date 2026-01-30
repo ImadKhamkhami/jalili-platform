@@ -41,9 +41,13 @@ public function statement(Project $project)
                 'tranche'     => $shop->tranche_number,
                 'number'      => $shop->number,
                 'area'        => $shop->area,
+
+                'discount'    => $shop->discount ?? 0,   // ✅ جديد
                 'total_price' => $shop->total_price,
+
                 'paid'        => $paid,
                 'remaining'   => $shop->total_price - $paid,
+
                 'payments'    => $shop->payments->map(fn ($p) => [
                     'amount' => $p->amount,
                     'date'   => optional($p->paid_at)->format('d/m/Y'),
@@ -64,9 +68,13 @@ public function statement(Project $project)
                 'number'      => $apartment->number,
                 'area'        => $apartment->area,
                 'terrace'     => $apartment->terrace_area,
+
+                'discount'    => $apartment->discount ?? 0, // ✅ جديد
                 'total_price' => $apartment->total_price,
+
                 'paid'        => $paid,
                 'remaining'   => $apartment->total_price - $paid,
+
                 'payments'    => $apartment->payments->map(fn ($p) => [
                     'amount' => $p->amount,
                     'date'   => optional($p->paid_at)->format('d/m/Y'),
@@ -87,9 +95,13 @@ public function statement(Project $project)
             'tranche'     => null,
             'number'      => $land->land_number,
             'area'        => $land->area,
+
+            'discount'    => $land->discount ?? 0, // ✅ جديد
             'total_price' => $land->total_price,
+
             'paid'        => $paid,
             'remaining'   => $land->total_price - $paid,
+
             'payments'    => $land->payments->map(fn ($p) => [
                 'amount' => $p->amount,
                 'date'   => optional($p->paid_at)->format('d/m/Y'),
@@ -97,7 +109,6 @@ public function statement(Project $project)
         ];
     }
 
-    // ✅ PRINT VIEW (بدون PDF)
     return view('pdf.project-statement', [
         'project' => $project,
         'rows'    => $rows,
