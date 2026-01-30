@@ -273,6 +273,58 @@
     </tbody>
 </table>
 
+<div class="page-break"></div>
+
+<h2 class="title">بيان التنازلات — تجزئة {{ $project->name }}</h2>
+
+
+<table class="summary-table">
+    <thead>
+        <tr>
+            <th>رقم القطعة</th>
+            <th>عدد التنازلات</th>
+            <th>تفاصيل التنازلات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse($transfers as $landId => $rows)
+            <tr>
+                <td class="bolddd">
+                    {{ optional($rows->first()->land)->land_number }}
+                </td>
+
+                <td class="bolddd">
+                    {{ $rows->count() }}
+                </td>
+
+                <td style="text-align:right; line-height:1.9">
+                    @foreach($rows as $index => $t)
+                        <div>
+                            <strong>{{ $index + 1 }}.</strong>
+                            من <span style="color:#8a2525" class="bolddd">
+                                {{ optional($t->fromCustomer)->name }}
+                            </span>
+                            إلى <span style="color:#0a6b6b" class="bolddd">
+                                {{ optional($t->toCustomer)->name }}
+                            </span>
+                            — بتاريخ
+                            <strong class="bolddd">
+                                {{ \Carbon\Carbon::parse($t->transfer_date)->format('d/m/Y') }}
+                            </strong>
+                        </div>
+                    @endforeach
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="3">لا توجد تنازلات مسجلة</td>
+            </tr>
+        @endforelse
+    </tbody>
+</table>
+
+
+
 <!-- 🖨️ طباعة تلقائية -->
 <script>
     window.onload = () => window.print();

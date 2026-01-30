@@ -62,39 +62,75 @@ public function printPlan(Project $project)
 {
     $lands = LandPlot::where('project_id', $project->id)
         ->orderByRaw('CAST(land_number AS UNSIGNED) ASC')
+        ->get();
+
+    // جميع تنازلات المشروع
+    $transfers = \App\Models\Transfer::where('context', 'land')
+        ->whereIn('unit_id', $lands->pluck('id'))
+        ->with(['fromCustomer', 'toCustomer'])
+        ->orderBy('transfer_number', 'asc') // ✅ الترتيب الصحيح
         ->get()
-        ->map(function ($land) {
+        ->groupBy('unit_id');
 
-            // المالك الحالي
-            $owners = collect();
+    $lands = $lands->map(function ($land) use ($transfers) {
 
+        $history = collect();
+
+        if ($transfers->has($land->id)) {
+
+            $landTransfers = $transfers[$land->id];
+
+            // 🔹 المالك الأول
+            $firstTransfer = $landTransfers->first();
+            if ($firstTransfer->fromCustomer) {
+                $history->push([
+                    'name'    => $firstTransfer->fromCustomer->name,
+                    'current' => false,
+                ]);
+            }
+
+            // 🔹 جميع المستفيدين بالتسلسل
+            foreach ($landTransfers as $t) {
+                if ($t->toCustomer) {
+                    $history->push([
+                        'name'    => $t->toCustomer->name,
+                        'current' => false,
+                        'date'    => optional($t->transfer_date)->format('d/m/Y'),
+                    ]);
+                }
+            }
+
+        } else {
+            // 🔹 لا توجد تنازلات → المالك الحالي فقط
             if ($land->customer_name) {
-                $owners->push([
+                $history->push([
                     'name'    => $land->customer_name,
                     'current' => true,
                 ]);
             }
+        }
 
-            // الملاك السابقون من التنازلات
-            $previousOwners = \App\Models\Transfer::where('context', 'land')
-                ->where('unit_id', $land->id)
-                ->orderBy('transfer_date', 'desc')
-                ->with('fromCustomer')
-                ->get()
-                ->map(function ($t) {
-                    return [
-                        'name'    => optional($t->fromCustomer)->name,
-                        'current' => false,
-                    ];
-                });
+        // 🔹 تحديد المالك الحالي (آخر واحد فقط)
+        if ($history->count()) {
+            $history = $history->map(function ($item, $index) use ($history) {
+                $item['current'] = $index === $history->count() - 1;
+                return $item;
+            });
+        }
 
-            $land->owners_history = $owners->merge($previousOwners);
+        $land->owners_history = $history;
 
-            return $land;
-        });
+        return $land;
+    });
 
-    return view('pdf.lands-plan', compact('project', 'lands'));
+    return view('pdf.lands-plan', [
+        'project'   => $project,
+        'lands'     => $lands,
+        'transfers' => $transfers,
+    ]);
 }
+
+
 
 
 
