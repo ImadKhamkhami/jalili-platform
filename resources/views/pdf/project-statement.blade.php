@@ -17,6 +17,35 @@
             color: #000;
         }
 
+        .remaining-zero {
+    background-color: #ffe082; /* أصفر واضح */
+}
+
+.solded {  /* أخضر فاتح */
+    background-color: #ffe082;
+    color: #0b0c0c;
+    font-weight: bold;
+}
+
+
+
+        .discount {
+    color: #c62828; /* أحمر */
+    font-weight: bold;
+}
+
+.payment-amount {
+    color: #145217; /* أخضر */
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.payment-date {
+    color: #000;
+    font-size: 13px;
+    font-weight: bold;
+}
+
         .header {
             text-align: center;
             margin-bottom: 18px;
@@ -220,8 +249,9 @@
                     <th>N°</th>
                     <th>مساحة</th>
                     <th>التخفيض</th>
-                    <th>الثمن الإجمالي</th>
+                    <th>ثمن إجمالي </th>
                     <th>الدفعات</th>
+                    <th> % </th>
                     <th>المدفوع</th>
                     <th>المتبقي</th>
                 </tr>
@@ -231,15 +261,48 @@
                 <tr>
                     <td class="font-bold">{{ $row['number'] }}</td>
                     <td class="font-bold">{{ $row['area'] }} م²</td>
-                    <td>{{ number_format($row['discount'],2,',','.') }}</td>
+                    <td class="discount">
+                    @if(($row['discount'] ?? 0) > 0)
+                    {{ number_format($row['discount'],2,',','.') }}
+                      @else
+                     -
+                     @endif
+                    </td>
                     <td class="font-bold">{{ number_format($row['total_price'],2,',','.') }}</td>
                     <td class="payments font-bold">
                         @forelse($row['payments'] as $p)
-                            {{ number_format($p['amount'],2,',','.') }} — {{ $p['date'] }}<br>
+                            <span class="payment-amount">
+                          {{ number_format($p['amount'],2,',','.') }}
+                        </span>
+                        <span class="payment-date">
+                         — {{ $p['date'] }}
+                        </span>
+                         <br>
                         @empty — @endforelse
                     </td>
-                    <td class="font-bold">{{ number_format($row['paid'],2,',','.') }}</td>
-                    <td class="font-bold">{{ number_format($row['remaining'],2,',','.') }}</td>
+                    <td>
+                      @if(($row['payment_percent'] ?? 0) > 0)
+                      {{ $row['payment_percent'] }} %
+                      @else
+                       -
+                      @endif
+                    </td>
+
+                     <td class="font-bold">
+                       {{ $row['paid'] > 0 ? number_format($row['paid'],2,',','.') : '-' }}
+                    </td>
+<td class="font-bold {{ ($row['paid'] > 0 && $row['remaining'] == 0) ? 'solded' : '' }}">
+    @if($row['paid'] > 0 && $row['remaining'] == 0)
+        soldé
+    @elseif($row['paid'] > 0)
+        {{ number_format($row['remaining'],2,',','.') }}
+    @else
+        -
+    @endif
+</td>
+
+
+
                 </tr>
             @endforeach
             </tbody>

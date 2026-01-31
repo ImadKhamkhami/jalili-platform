@@ -31,7 +31,12 @@ public function statement(Project $project)
 
         // ---------- المحلات ----------
         foreach ($building->shops as $shop) {
+
             $paid = $shop->payments->sum('amount');
+
+            $paymentPercent = $shop->total_price > 0
+                ? round(($paid / $shop->total_price) * 100, 2)
+                : 0;
 
             $rows[] = [
                 'type'      => 'shop',
@@ -42,13 +47,14 @@ public function statement(Project $project)
                 'number'      => $shop->number,
                 'area'        => $shop->area,
 
-                'discount'    => $shop->discount ?? 0,   // ✅ جديد
+                'discount'    => $shop->discount ?? 0,
                 'total_price' => $shop->total_price,
 
-                'paid'        => $paid,
-                'remaining'   => $shop->total_price - $paid,
+                'paid'            => $paid,
+                'remaining'       => $shop->total_price - $paid,
+                'payment_percent' => $paymentPercent, // ✅ جديد
 
-                'payments'    => $shop->payments->map(fn ($p) => [
+                'payments' => $shop->payments->map(fn ($p) => [
                     'amount' => $p->amount,
                     'date'   => optional($p->paid_at)->format('d/m/Y'),
                 ])->toArray(),
@@ -57,7 +63,12 @@ public function statement(Project $project)
 
         // ---------- الشقق ----------
         foreach ($building->apartments as $apartment) {
+
             $paid = $apartment->payments->sum('amount');
+
+            $paymentPercent = $apartment->total_price > 0
+                ? round(($paid / $apartment->total_price) * 100, 2)
+                : 0;
 
             $rows[] = [
                 'type'      => 'apartment',
@@ -69,13 +80,14 @@ public function statement(Project $project)
                 'area'        => $apartment->area,
                 'terrace'     => $apartment->terrace_area,
 
-                'discount'    => $apartment->discount ?? 0, // ✅ جديد
+                'discount'    => $apartment->discount ?? 0,
                 'total_price' => $apartment->total_price,
 
-                'paid'        => $paid,
-                'remaining'   => $apartment->total_price - $paid,
+                'paid'            => $paid,
+                'remaining'       => $apartment->total_price - $paid,
+                'payment_percent' => $paymentPercent, // ✅ جديد
 
-                'payments'    => $apartment->payments->map(fn ($p) => [
+                'payments' => $apartment->payments->map(fn ($p) => [
                     'amount' => $p->amount,
                     'date'   => optional($p->paid_at)->format('d/m/Y'),
                 ])->toArray(),
@@ -85,7 +97,12 @@ public function statement(Project $project)
 
     // ================= القطع الأرضية =================
     foreach ($project->landPlots as $land) {
+
         $paid = $land->payments->sum('amount');
+
+        $paymentPercent = $land->total_price > 0
+            ? round(($paid / $land->total_price) * 100, 2)
+            : 0;
 
         $rows[] = [
             'type'      => 'land',
@@ -96,13 +113,14 @@ public function statement(Project $project)
             'number'      => $land->land_number,
             'area'        => $land->area,
 
-            'discount'    => $land->discount ?? 0, // ✅ جديد
+            'discount'    => $land->discount ?? 0,
             'total_price' => $land->total_price,
 
-            'paid'        => $paid,
-            'remaining'   => $land->total_price - $paid,
+            'paid'            => $paid,
+            'remaining'       => $land->total_price - $paid,
+            'payment_percent' => $paymentPercent, // ✅ جديد
 
-            'payments'    => $land->payments->map(fn ($p) => [
+            'payments' => $land->payments->map(fn ($p) => [
                 'amount' => $p->amount,
                 'date'   => optional($p->paid_at)->format('d/m/Y'),
             ])->toArray(),
@@ -163,8 +181,8 @@ public function index(Request $request)
 
         $project = Project::create($validated);
 
-return Inertia::location(
-    route('projects.index', [
+      return Inertia::location(
+       route('projects.index', [
         'focus' => $project->id,
         'type'  => $project->type, // building / lot
     ])
@@ -191,12 +209,12 @@ return Inertia::location(
 
         $project->update($validated);
 
-return Inertia::location(
-    route('projects.index', [
+           return Inertia::location(
+           route('projects.index', [
         'focus' => $project->id,
         'type'  => $project->type, // مهم باش يفتح tab الصحيح
-    ])
-);
+      ])
+      );
 
     }
 
