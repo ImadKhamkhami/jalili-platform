@@ -240,7 +240,7 @@
 <table class="summary-table">
 <thead>
 <tr>
-    <th>رقم القطعة</th>
+    <th> القطعة</th>
     <th>عدد التنازلات</th>
     <th>تفاصيل التنازلات</th>
 </tr>
@@ -268,6 +268,49 @@
 @endforelse
 </tbody>
 </table>
+
+
+<div class="page-break"></div>
+
+<h2 class="title">بيان السمسرة — تجزئة {{ $project->name }}</h2>
+
+<table class="summary-table">
+<thead>
+<tr>
+    <th> القطعة</th>
+    <th>المبلغ </th>
+    <th>التاريخ </th>
+    <th>اسم السمسار</th>
+</tr>
+</thead>
+
+<tbody>
+@forelse($commissions as $c)
+<tr>
+    <td class="bolddd">
+         {{ optional($c->land)->land_number }}
+    </td>
+
+    <td class="bolddd">
+        {{ number_format($c->amount, 2, ',', '.') }}
+    </td>
+
+    <td class="bolddd">
+        {{ \Carbon\Carbon::parse($c->commission_date)->format('d/m/Y') }}
+    </td>
+
+    <td class="bolddd">
+        {{ $c->broker_name ?: '—' }}
+    </td>
+</tr>
+@empty
+<tr>
+    <td colspan="4">لا توجد سمسرات مسجلة</td>
+</tr>
+@endforelse
+</tbody>
+</table>
+
 
 <script>
     window.onload = () => window.print();

@@ -13,6 +13,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CustomerQuickSearchController;
    use App\Http\Controllers\TransferController;
@@ -20,6 +21,35 @@ use App\Http\Controllers\CustomerQuickSearchController;
 
     Route::middleware(['auth'])->group(function () {
 
+
+
+       /*
+   |--------------------------------------------------------------------------
+   | السمسرة
+   |--------------------------------------------------------------------------
+   */
+
+    Route::get('/commissions', [CommissionController::class, 'index'])
+        ->name('commissions.index');
+
+    Route::get('/commissions/create/{context}/{unit}', [CommissionController::class, 'create'])
+        ->name('commissions.create');
+
+    Route::post('/commissions', [CommissionController::class, 'store'])
+        ->name('commissions.store');
+
+    Route::get('/commissions/{commission}/edit', [CommissionController::class, 'edit'])
+        ->name('commissions.edit');
+
+    Route::put('/commissions/{commission}', [CommissionController::class, 'update'])
+        ->name('commissions.update');
+
+    Route::delete('/commissions/{commission}', [CommissionController::class, 'destroy'])
+        ->name('commissions.destroy');
+
+        Route::get('/commissions/{commission}/print', 
+        [CommissionController::class, 'print']
+        )->name('commissions.print');
 
 
    /*

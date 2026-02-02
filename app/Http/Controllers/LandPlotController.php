@@ -64,11 +64,11 @@ public function printPlan(Project $project)
         ->orderByRaw('CAST(land_number AS UNSIGNED) ASC')
         ->get();
 
-    // جميع تنازلات المشروع
+    /* ================= التنازلات ================= */
     $transfers = \App\Models\Transfer::where('context', 'land')
         ->whereIn('unit_id', $lands->pluck('id'))
         ->with(['fromCustomer', 'toCustomer'])
-        ->orderBy('transfer_number', 'asc') // ✅ الترتيب الصحيح
+        ->orderBy('transfer_number', 'asc')
         ->get()
         ->groupBy('unit_id');
 
@@ -89,7 +89,7 @@ public function printPlan(Project $project)
                 ]);
             }
 
-            // 🔹 جميع المستفيدين بالتسلسل
+            // 🔹 المستفيدون
             foreach ($landTransfers as $t) {
                 if ($t->toCustomer) {
                     $history->push([
@@ -101,7 +101,6 @@ public function printPlan(Project $project)
             }
 
         } else {
-            // 🔹 لا توجد تنازلات → المالك الحالي فقط
             if ($land->customer_name) {
                 $history->push([
                     'name'    => $land->customer_name,
@@ -110,7 +109,7 @@ public function printPlan(Project $project)
             }
         }
 
-        // 🔹 تحديد المالك الحالي (آخر واحد فقط)
+        // 🔹 تحديد المالك الحالي
         if ($history->count()) {
             $history = $history->map(function ($item, $index) use ($history) {
                 $item['current'] = $index === $history->count() - 1;
@@ -123,12 +122,21 @@ public function printPlan(Project $project)
         return $land;
     });
 
+    /* ================= السمسرة ================= */
+    $commissions = \App\Models\Commission::where('context', 'land')
+        ->whereIn('land_id', $lands->pluck('id'))
+        ->with('land')
+        ->orderBy('commission_date', 'asc')
+        ->get();
+
     return view('pdf.lands-plan', [
-        'project'   => $project,
-        'lands'     => $lands,
-        'transfers' => $transfers,
+        'project'     => $project,
+        'lands'       => $lands,
+        'transfers'   => $transfers,
+        'commissions' => $commissions, // ✅ مهم
     ]);
 }
+
 
 
 

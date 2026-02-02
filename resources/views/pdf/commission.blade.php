@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>توصيل دفعة</title>
+    <title>توصيل سمسرة</title>
 
     <style>
         @page {
@@ -15,23 +15,25 @@
             font-size: 15px;
             direction: rtl;
         }
+
         .receipt-title {
             font-size: 20px;
             font-weight: bold;
             margin-top: 8px;
-            margin-bottom: 25px; /* ⬅️ المسافة المطلوبة */
+            margin-bottom: 25px;
             text-align: center;
+            color: #0d47a1; /* 🔵 أزرق */
         }
 
         .half {
-            height: 130mm; /* ✅ نصف الصفحة فعليًا */
-            border: 2px solid #3c7a49;
+            height: 130mm;
+            border: 2px solid #1565c0; /* 🔵 إطار أزرق */
             padding: 18px;
             box-sizing: border-box;
         }
 
         .separator {
-            border-top: 1px dashed #000;
+            border-top: 1px dashed #1565c0;
             margin: 6mm 0;
         }
 
@@ -41,13 +43,7 @@
         }
 
         .logo img {
-            height: 90px; /* تكبير الشعار */
-        }
-
-        .title {
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 16px;
+            height: 90px;
         }
 
         table.info {
@@ -63,7 +59,7 @@
         }
 
         .label {
-            color: #666;
+            color: #555;
             font-size: 12px;
         }
 
@@ -72,9 +68,9 @@
         }
 
         .amount {
-            color: #000; /* ✅ أسود */
+            color: #0d47a1; /* 🔵 مبلغ أزرق */
             font-weight: bold;
-            font-size: 14px;
+            font-size: 15px;
         }
 
         table.signatures {
@@ -92,15 +88,15 @@
 <body>
 
 @php
-function unitDescription($payment) {
-    if ($payment->context === 'apartment') {
-        return 'شقة   ' . $payment->apartment->number;
+function unitDescription($commission) {
+    if ($commission->context === 'land') {
+        return 'قطعة ' . optional($commission->land)->land_number;
     }
-    if ($payment->context === 'shop') {
-        return 'محل   ' . $payment->shop->number;
+    if ($commission->context === 'apartment') {
+        return 'شقة ' . optional($commission->apartment)->number;
     }
-    if ($payment->context === 'land') {
-        return 'قطعة   ' . $payment->land->land_number;
+    if ($commission->context === 'shop') {
+        return 'محل ' . optional($commission->shop)->number;
     }
     return '—';
 }
@@ -113,34 +109,42 @@ function unitDescription($payment) {
         <img src="{{ asset('images/jalili-logo.png') }}">
     </div>
 
-    <div class="receipt-title">توصيل الاداء</div>
+    <div class="receipt-title">توصيل سمسرة</div>
 
     <table class="info">
         <tr>
             <td class="label">المشروع</td>
-            <td class="value">{{ $payment->project->name }}</td>
-            <td class="label">-</td>
-            <td class="value">{{ unitDescription($payment) }}</td>
+            <td class="value">
+                {{ $commission->project->name ?? '-' }}
+            </td>
+            <td class="label">الوحدة</td>
+            <td class="value">
+                {{ unitDescription($commission) }}
+            </td>
         </tr>
 
         <tr>
-            <td class="label">المبلغ</td>
-            <td class="amount">{{ number_format($payment->amount, 2, ',', '.') }} درهم</td>
-            <td class="label">طريقة الدفع</td>
-            <td class="value">{{ $payment->payment_method }}</td>
+            <td class="label">مبلغ السمسرة</td>
+            <td class="amount">
+                {{ number_format($commission->amount, 2, ',', '.') }} درهم
+            </td>
+            <td class="label">اسم السمسار</td>
+            <td class="value">
+                {{ $commission->broker_name ?? '-' }}
+            </td>
         </tr>
 
         <tr>
             <td class="label">التاريخ</td>
-            <td class="value">{{ \Carbon\Carbon::parse($payment->paid_at)->format('Y-m-d') }}</td>
-            <td class="label">رقم التوصيل</td>
-            <td class="value">{{ $payment->receipt_number }}</td>
+            <td class="value">
+                {{ \Carbon\Carbon::parse($commission->commission_date)->format('Y-m-d') }}
+            </td>
         </tr>
     </table>
 
     <table class="signatures">
         <tr>
-            <td>توقيع الزبون<br><br>------------------------</td>
+            <td>توقيع السمسار<br><br>------------------------</td>
             <td>توقيع الإدارة<br><br>------------------------</td>
         </tr>
     </table>
@@ -155,40 +159,47 @@ function unitDescription($payment) {
         <img src="{{ asset('images/jalili-logo.png') }}">
     </div>
 
-    <div class="receipt-title">توصيل الاداء</div>
+    <div class="receipt-title">توصيل سمسرة</div>
 
     <table class="info">
         <tr>
             <td class="label">المشروع</td>
-            <td class="value">{{ $payment->project->name }}</td>
+            <td class="value">
+                {{ $commission->project->name ?? '-' }}
+            </td>
             <td class="label">الوحدة</td>
-            <td class="value">{{ unitDescription($payment) }}</td>
+            <td class="value">
+                {{ unitDescription($commission) }}
+            </td>
         </tr>
 
         <tr>
-            <td class="label">المبلغ</td>
-            <td class="amount">{{ number_format($payment->amount, 2, ',', '.') }} درهم</td>
-            <td class="label">طريقة الدفع</td>
-            <td class="value">{{ $payment->payment_method }}</td>
+            <td class="label">مبلغ السمسرة</td>
+            <td class="amount">
+                {{ number_format($commission->amount, 2, ',', '.') }} درهم
+            </td>
+            <td class="label">اسم السمسار</td>
+            <td class="value">
+                {{ $commission->broker_name ?? '-' }}
+            </td>
         </tr>
 
         <tr>
             <td class="label">التاريخ</td>
-            <td class="value">{{ \Carbon\Carbon::parse($payment->paid_at)->format('Y-m-d') }}</td>
-            <td class="label">رقم التوصيل</td>
-            <td class="value">{{ $payment->receipt_number }}</td>
+            <td class="value">
+                {{ \Carbon\Carbon::parse($commission->commission_date)->format('Y-m-d') }}
+            </td>
         </tr>
     </table>
 
     <table class="signatures">
         <tr>
-            <td>توقيع الزبون<br><br>------------------------</td>
+            <td>توقيع السمسار<br><br>------------------------</td>
             <td>توقيع الإدارة<br><br>------------------------</td>
         </tr>
     </table>
 </div>
 
-<!-- 🖨️ طباعة تلقائية -->
 <script>
     window.onload = () => window.print();
 </script>

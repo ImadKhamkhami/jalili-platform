@@ -64,6 +64,12 @@ public function transfers()
         ->orderBy('transfer_number');
 }
 
+public function commissions()
+{
+    return $this->hasMany(Commission::class, 'apartment_id');
+}
+
+
 
    
 

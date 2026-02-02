@@ -51,5 +51,11 @@ class LandPlot extends Model
         ->orderBy('transfer_number');
     }
 
+    public function commissions()
+{
+    return $this->hasMany(Commission::class, 'land_id');
+}
+
+
 
 }

@@ -24,7 +24,10 @@ import {
   ChevronDown,
   UserPlus,
   Search ,
-  ArrowLeftRight
+  ArrowLeftRight,
+  Handshake,
+  Percent ,
+  BadgeDollarSign 
 } from 'lucide-vue-next'
 
 
@@ -109,7 +112,7 @@ watch(
     class="fixed right-0 top-0 h-screen w-64 bg-[#E8F3ED] border-l border-green-200 shadow-sm flex flex-col overflow-hidden"
   >
     <!-- ================= HEADER ================= -->
-    <SidebarHeader class="py-8 px-2 text-center bg-[#E8F3ED]">
+    <SidebarHeader class="py-5 px-2 text-center bg-[#E8F3ED]">
       <Link href="/dashboard">
         <img
           src="/images/jalili-logo.png"
@@ -317,6 +320,20 @@ watch(
     <ArrowLeftRight class="w-5 h-5" />
     <span class="group-data-[collapsible=icon]:hidden font-bold">
       التنازلات
+    </span>
+  </Link>
+        </SidebarMenuButton>
+                <!-- السمسرة -->
+        <SidebarMenuButton
+  as-child
+  :class="isTransfersActive()
+    ? 'bg-green-200 font-bold'
+    : 'hover:bg-green-200'"
+>
+  <Link href="/commissions" class="flex items-center gap-3 px-4 py-2 rounded-lg">
+    <BadgeDollarSign class="w-5 h-5" />
+    <span class="group-data-[collapsible=icon]:hidden font-bold">
+      السمسرة
     </span>
   </Link>
         </SidebarMenuButton>

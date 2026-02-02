@@ -61,6 +61,13 @@ protected $casts = [
         return $this->belongsTo(Customer::class, 'customer_ref_id');
     }
 
+public function commissions()
+{
+    return $this->hasMany(Commission::class, 'shop_id');
+}
+
+
+
     public function project()
     {
         return $this->belongsTo(Project::class);
