@@ -18,25 +18,32 @@
             font-size: 22px;
             font-weight: bold;
         }
+
         /* 🔴 القطع المحجوزة */
-.reserved-underline {
-    display: inline-block;
-    padding-bottom: 2px;
-    border-bottom: 3px solid #c62828;
-}
+        .reserved-underline {
+            display: inline-block;
+            padding-bottom: 2px;
+            border-bottom: 3px solid #c62828;
+        }
 
-.current-owner {
-    color: #000000;
-    font-weight: bold;
-    margin-bottom: 4px;
-    display: block;
-}
+        /* 🟡 خانة قطعة مباعة */
+        .land-sold {
+            background-color: #ffe082;
+            border-color: #f9a825;
+        }
 
-.previous-owner {
-    color: #8a2525;
-    font-size: 11px;
-    display: block;
-}
+        .current-owner {
+            color: #000;
+            font-weight: bold;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .previous-owner {
+            color: #8a2525;
+            font-size: 11px;
+            display: block;
+        }
 
         /* ===================== الإحصائيات ===================== */
         .stats-row {
@@ -51,39 +58,31 @@
             margin: 0 8px;
             padding: 6px 16px;
             border-radius: 10px;
-        }
-
-        .stats-total {
             background: #f3f3f3;
         }
 
-        /* ===================================================
-           مخطط القطع
-        =================================================== */
-.plan-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 40px;
-    table-layout: fixed;
-}
+        /* ===================== مخطط القطع ===================== */
+        .plan-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            table-layout: fixed;
+        }
 
-        .plan-table tr {
-        page-break-inside: avoid;
+        .plan-table tr,
+        .plan-table td {
+            page-break-inside: avoid;
         }
 
         .plan-table td {
-         page-break-inside: avoid;
+            border: 2px solid #000;
+            height: 118px;
+            padding: 10px 8px;
+            vertical-align: top;
+            text-align: center;
+            width: 25%;
+            overflow: hidden;
         }
-
-.plan-table td {
-    border: 2px solid #000;
-    height: 118px;
-    padding: 10px 8px;
-    vertical-align: top;
-    text-align: center;
-    width: 25%;
-    overflow: hidden;
-}
 
         .land-title {
             font-size: 17px;
@@ -104,23 +103,12 @@
             color: #c62828;
         }
 
-        /* 🟡 القطع المباعة */
-        .sold-badge {
-            background: #ffe082;
-            border: 1px solid #f9a825;
-            padding: 2px 8px;
-            border-radius: 6px;
-            display: inline-block;
-        }
-
         /* ===================== فاصل صفحة ===================== */
         .page-break {
             page-break-before: always;
         }
 
-        /* ===================================================
-           جدول الملخص حسب الزبناء
-        =================================================== */
+        /* ===================== جدول الملخص ===================== */
         .summary-table {
             width: 100%;
             border-collapse: collapse;
@@ -150,7 +138,6 @@
             font-weight: bold;
         }
 
-        /* ===== إعدادات الطباعة ===== */
         @media print {
             body {
                 -webkit-print-color-adjust: exact;
@@ -168,164 +155,120 @@
     $vtLands    = $lands->where('status', 'متاحة')->count();
 @endphp
 
-{{-- ===================== العنوان ===================== --}}
-<h2 class="title">
-    تجزئة {{ $project->name }}
-</h2>
+<h2 class="title">تجزئة {{ $project->name }}</h2>
 
-{{-- ===================== الإحصائيات ===================== --}}
 <div class="stats-row">
-    <span class="stats-total">إجمالي القطع : {{ $totalLands }}</span>
-    <span class="stats-total">القطع المباعة : {{ $soldLands }}</span>
-    <span class="stats-total">الباقي : {{ $vtLands }}</span>
+    <span>إجمالي القطع : {{ $totalLands }}</span>
+    <span>القطع المباعة : {{ $soldLands }}</span>
+    <span>الباقي : {{ $vtLands }}</span>
 </div>
 
-{{-- ===================== مخطط القطع ===================== --}}
 <table class="plan-table">
 @foreach($lands->chunk(4) as $row)
-    <tr>
-        @foreach($row as $land)
+<tr>
+@foreach($row as $land)
+@php
+    $facadeLabel = $land->view_type === '2-FACADE' ? '2F' : '1F';
+@endphp
 
-            @php
-                $facadeLabel = $land->view_type === '2-FACADE' ? '2F' : '1F';
-            @endphp
-
-            <td>
-<div class="land-title">
-    @if($land->status === 'مباعة')
-        <span class="sold-badge">قطعة {{ $land->land_number }}</span>
-
-    @elseif($land->status === 'محجوزة')
-        <span class="reserved-underline">
+<td class="{{ $land->status === 'مباعة' ? 'land-sold' : '' }}">
+    <div class="land-title">
+        @if($land->status === 'محجوزة')
+            <span class="reserved-underline">قطعة {{ $land->land_number }}</span>
+        @else
             قطعة {{ $land->land_number }}
-        </span>
-
-    @else
-        قطعة {{ $land->land_number }}
-    @endif
-</div>
-                <div class="info">
-                    <strong>{{ $land->area }}</strong> م²
-                    &nbsp;—&nbsp;
-                    <strong>{{ $land->road_type }}</strong> م
-                    &nbsp;—&nbsp;
-                    <strong>{{ $facadeLabel }}</strong>
-                </div>
-
-@if($land->owners_history->count())
-    <div class="owner">
-        @foreach($land->owners_history as $owner)
-            @if($owner['current'])
-                <span class="current-owner">
-                    {{ $owner['name'] }}
-                </span>
-            @else
-                <span class="previous-owner">
-                    {{ $owner['name'] }}
-                </span>
-            @endif
-        @endforeach
+        @endif
     </div>
-@endif
 
+    <div class="info">
+        <strong>{{ $land->area }}</strong> م² —
+        <strong>{{ $land->road_type }}</strong> م —
+        <strong>{{ $facadeLabel }}</strong>
+    </div>
 
+    @if($land->owners_history->count())
+        <div class="owner">
+            @foreach($land->owners_history as $owner)
+                @if($owner['current'])
+                    <span class="current-owner">{{ $owner['name'] }}</span>
+                @else
+                    <span class="previous-owner">{{ $owner['name'] }}</span>
+                @endif
+            @endforeach
+        </div>
+    @endif
+</td>
 
-            </td>
-
-        @endforeach
-    </tr>
+@endforeach
+</tr>
 @endforeach
 </table>
 
-{{-- ===================== صفحة جديدة ===================== --}}
 <div class="page-break"></div>
 
-{{-- ===================== ملخص القطع حسب الزبناء ===================== --}}
-<h2 class="title">
-    تجزئة {{ $project->name }} — توزيع القطع حسب الزبناء
-</h2>
+<h2 class="title">تجزئة {{ $project->name }} — توزيع القطع حسب الزبناء</h2>
 
 @php
-    $grouped = $lands
-        ->filter(fn($l) => !empty($l->customer_name))
+    $grouped = $lands->filter(fn($l) => !empty($l->customer_name))
         ->groupBy('customer_name')
         ->sortByDesc(fn($items) => $items->count());
 @endphp
 
 <table class="summary-table">
-    <thead>
-        <tr>
-            <th>اسم الزبون</th>
-            <th>عدد القطع</th>
-            <th>أرقام القطع</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($grouped as $customer => $items)
-            <tr>
-                <td class="summary-owner">{{ $customer }}</td>
-                <td class="bolddd">{{ $items->count() }}</td>
-                <td class="bolddd">
-                    {{ $items->pluck('land_number')->sort()->implode(' ، ') }}
-                </td>
-            </tr>
-        @endforeach
-    </tbody>
+<thead>
+<tr>
+    <th>اسم الزبون</th>
+    <th>عدد القطع</th>
+    <th>أرقام القطع</th>
+</tr>
+</thead>
+<tbody>
+@foreach($grouped as $customer => $items)
+<tr>
+    <td class="summary-owner">{{ $customer }}</td>
+    <td class="bolddd">{{ $items->count() }}</td>
+    <td class="bolddd">{{ $items->pluck('land_number')->sort()->implode(' ، ') }}</td>
+</tr>
+@endforeach
+</tbody>
 </table>
 
 <div class="page-break"></div>
 
 <h2 class="title">بيان التنازلات — تجزئة {{ $project->name }}</h2>
 
-
 <table class="summary-table">
-    <thead>
-        <tr>
-            <th>رقم القطعة</th>
-            <th>عدد التنازلات</th>
-            <th>تفاصيل التنازلات</th>
-        </tr>
-    </thead>
-    <tbody>
-        @forelse($transfers as $landId => $rows)
-            <tr>
-                <td class="bolddd">
-                    {{ optional($rows->first()->land)->land_number }}
-                </td>
-
-                <td class="bolddd">
-                    {{ $rows->count() }}
-                </td>
-
-                <td style="text-align:right; line-height:1.9">
-                    @foreach($rows as $index => $t)
-                        <div>
-                            <strong>{{ $index + 1 }}.</strong>
-                            من <span style="color:#8a2525" class="bolddd">
-                                {{ optional($t->fromCustomer)->name }}
-                            </span>
-                            إلى <span style="color:#0a6b6b" class="bolddd">
-                                {{ optional($t->toCustomer)->name }}
-                            </span>
-                            — بتاريخ
-                            <strong class="bolddd">
-                                {{ \Carbon\Carbon::parse($t->transfer_date)->format('d/m/Y') }}
-                            </strong>
-                        </div>
-                    @endforeach
-                </td>
-            </tr>
-        @empty
-            <tr>
-                <td colspan="3">لا توجد تنازلات مسجلة</td>
-            </tr>
-        @endforelse
-    </tbody>
+<thead>
+<tr>
+    <th>رقم القطعة</th>
+    <th>عدد التنازلات</th>
+    <th>تفاصيل التنازلات</th>
+</tr>
+</thead>
+<tbody>
+@forelse($transfers as $rows)
+<tr>
+    <td class="bolddd">{{ optional($rows->first()->land)->land_number }}</td>
+    <td class="bolddd">{{ $rows->count() }}</td>
+    <td style="text-align:right; line-height:1.9">
+        @foreach($rows as $i => $t)
+            <div>
+                <strong>{{ $i + 1 }}.</strong>
+                من <span style="color:#8a2525" class="bolddd">{{ optional($t->fromCustomer)->name }}</span>
+                إلى <span style="color:#0a6b6b" class="bolddd">{{ optional($t->toCustomer)->name }}</span>
+                — بتاريخ <strong>{{ \Carbon\Carbon::parse($t->transfer_date)->format('d/m/Y') }}</strong>
+            </div>
+        @endforeach
+    </td>
+</tr>
+@empty
+<tr>
+    <td colspan="3">لا توجد تنازلات مسجلة</td>
+</tr>
+@endforelse
+</tbody>
 </table>
 
-
-
-<!-- 🖨️ طباعة تلقائية -->
 <script>
     window.onload = () => window.print();
 </script>

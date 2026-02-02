@@ -35,12 +35,8 @@ public function print(Request $request, Customer $customer)
                     $qq->where('id', $projectId)
                 )
             )
-            ->when($unitNumber, fn ($q) =>
-                $q->where('number', $unitNumber)
-            )
-            ->when($tranche, fn ($q) =>
-                $q->where('tranche_number', $tranche)
-            )
+            ->when($unitNumber, fn ($q) => $q->where('number', $unitNumber))
+            ->when($tranche, fn ($q) => $q->where('tranche_number', $tranche))
             ->when($building, fn ($q) =>
                 $q->whereHas('building', fn ($qq) =>
                     $qq->where('name', $building)
@@ -53,15 +49,23 @@ public function print(Request $request, Customer $customer)
                     ->where('apartment_id', $a->id)
                     ->sum('amount');
 
+                $total = $a->total_price;
+
                 return [
                     'type'            => 'apartment',
                     'project_name'    => $a->building?->project?->name ?? '-',
                     'building_number' => $a->building?->name ?? '-',
                     'tranche_number'  => $a->tranche_number,
                     'number'          => $a->number,
-                    'total_price'     => $a->total_price,
+
+                    'total_price'     => $total,
                     'total_paid'      => $paid,
-                    'remaining'       => $a->total_price - $paid,
+                    'remaining'       => $total - $paid,
+
+                    // ✅ نسبة الأداء
+                    'payment_percent' => $total > 0
+                        ? round(($paid / $total) * 100, 2)
+                        : 0,
                 ];
             });
 
@@ -78,9 +82,7 @@ public function print(Request $request, Customer $customer)
                     $qq->where('id', $projectId)
                 )
             )
-            ->when($unitNumber, fn ($q) =>
-                $q->where('number', $unitNumber)
-            )
+            ->when($unitNumber, fn ($q) => $q->where('number', $unitNumber))
             ->when($building, fn ($q) =>
                 $q->whereHas('building', fn ($qq) =>
                     $qq->where('name', $building)
@@ -89,18 +91,26 @@ public function print(Request $request, Customer $customer)
             ->get()
             ->map(function ($s) {
 
-                $paid = Payment::where('context', 'shop')
+                $paid  = Payment::where('context', 'shop')
                     ->where('shop_id', $s->id)
                     ->sum('amount');
+
+                $total = $s->total_price;
 
                 return [
                     'type'            => 'shop',
                     'project_name'    => $s->building?->project?->name ?? '-',
                     'building_number' => $s->building?->name ?? '-',
                     'number'          => $s->number,
-                    'total_price'     => $s->total_price,
+
+                    'total_price'     => $total,
                     'total_paid'      => $paid,
-                    'remaining'       => $s->total_price - $paid,
+                    'remaining'       => $total - $paid,
+
+                    // ✅ نسبة الأداء
+                    'payment_percent' => $total > 0
+                        ? round(($paid / $total) * 100, 2)
+                        : 0,
                 ];
             });
 
@@ -112,27 +122,33 @@ public function print(Request $request, Customer $customer)
 
         $lands = LandPlot::with('project')
             ->where('customer_ref_id', $customer->id)
-            ->when($projectId, fn ($q) =>
-                $q->where('project_id', $projectId)
-            )
-            ->when($unitNumber, fn ($q) =>
-                $q->where('land_number', $unitNumber)
-            )
+            ->when($projectId, fn ($q) => $q->where('project_id', $projectId))
+            ->when($unitNumber, fn ($q) => $q->where('land_number', $unitNumber))
             ->get()
             ->map(function ($l) {
 
-                $paid = Payment::where('context', 'land')
+                $paid  = Payment::where('context', 'land')
                     ->where('land_id', $l->id)
                     ->sum('amount');
+
+                $total = $l->total_price;
 
                 return [
                     'type'         => 'land',
                     'project_name' => $l->project?->name ?? '-',
                     'number'       => $l->land_number,
-                    'extra'        => 'الطريق: '.$l->road_type.'م — الواجهة: '.$l->view_type,
-                    'total_price'  => $l->total_price,
+                    'area'         => $l->area,
+                    'road_type'    => $l->road_type,
+                    'view_type'    => $l->view_type === '2-FACADE' ? '2F' : '1F',
+
+                    'total_price'  => $total,
                     'total_paid'   => $paid,
-                    'remaining'    => $l->total_price - $paid,
+                    'remaining'    => $total - $paid,
+
+                    // ✅ نسبة الأداء
+                    'payment_percent' => $total > 0
+                        ? round(($paid / $total) * 100, 2)
+                        : 0,
                 ];
             });
 
@@ -145,6 +161,7 @@ public function print(Request $request, Customer $customer)
         'units'    => $units,
     ]);
 }
+
 
 
 public function index(Request $request)

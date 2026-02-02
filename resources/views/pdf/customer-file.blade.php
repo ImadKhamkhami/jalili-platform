@@ -28,6 +28,7 @@
         th, td {
             border: 1px solid #000;
             padding: 6px;
+            font-weight: bold;
             text-align: center;
         }
 
@@ -49,9 +50,13 @@
 </head>
 <body>
 
-<h1>ملف الزبون</h1>
+<h1>
+    بيان السيد  {{ $customer->name }}
+</h1>
 
-{{-- ===== معلومات الزبون ===== --}}
+
+{{-- ===== 
+معلومات الزبون     
 <table style="font-size:13px;">
     <thead>
         <tr>
@@ -68,6 +73,8 @@
         </tr>
     </tbody>
 </table>
+===== --}}
+
 
 {{-- ================== الشقق ================== --}}
 @php
@@ -164,11 +171,14 @@
     <thead>
         <tr>
             <th>المشروع</th>
-            <th>رقم القطعة</th>
-            <th>الطريق / الواجهة</th>
+            <th> القطعة</th>
+            <th>المساحة</th>
+            <th>الطريق</th>
+            <th>الواجهة</th>
             <th>الثمن</th>
             <th>المدفوع</th>
             <th>المتبقي</th>
+            <th>نسبة الاداء</th>
         </tr>
     </thead>
     <tbody>
@@ -176,20 +186,39 @@
         <tr>
             <td>{{ $u['project_name'] }}</td>
             <td>{{ $u['number'] }}</td>
-            <td>{{ $u['extra'] }}</td>
+            <td>{{ $u['area'] }} م²</td>
+            <td>{{ $u['road_type'] }} م</td>
+            <td>{{ $u['view_type'] }}</td>
             <td>{{ number_format($u['total_price'],2,',','.') }}</td>
             <td>{{ number_format($u['total_paid'],2,',','.') }}</td>
             <td>{{ number_format($u['remaining'],2,',','.') }}</td>
+            <td>{{ $u['payment_percent'] > 0 ? $u['payment_percent'].' %' : '-' }}</td>
+
         </tr>
         @endforeach
     </tbody>
-    <tfoot>
-        <tr>
-            <td colspan="3">الإجمالي</td>
-            <td>{{ number_format($lands->sum('total_price'),2,',','.') }}</td>
-            <td>{{ number_format($lands->sum('total_paid'),2,',','.') }}</td>
-            <td>{{ number_format($lands->sum('remaining'),2,',','.') }}</td>
-        </tr>
+  <tfoot>
+    <tr>
+        <!-- الأعمدة الوصفية -->
+        <td colspan="5" style="text-align:center; font-weight:bold;">
+            الإجمالي
+        </td>
+
+        <!-- الثمن -->
+        <td style="font-weight:bold;">
+            {{ number_format($lands->sum('total_price'),2,',','.') }}
+        </td>
+
+        <!-- المدفوع -->
+        <td style="font-weight:bold;">
+            {{ number_format($lands->sum('total_paid'),2,',','.') }}
+        </td>
+
+        <!-- المتبقي -->
+        <td style="font-weight:bold;">
+            {{ number_format($lands->sum('remaining'),2,',','.') }}
+        </td>
+    </tr>
     </tfoot>
 </table>
 @endif
