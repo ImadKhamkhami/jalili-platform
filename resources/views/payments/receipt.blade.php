@@ -119,7 +119,7 @@ function unitDescription($payment) {
         <tr>
             <td class="label">المشروع</td>
             <td class="value">{{ $payment->project->name }}</td>
-            <td class="label">الوحدة</td>
+            <td class="label">-</td>
             <td class="value">{{ unitDescription($payment) }}</td>
         </tr>
 
