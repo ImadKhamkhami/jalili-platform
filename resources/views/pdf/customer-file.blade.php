@@ -10,7 +10,7 @@
 
         body {
             font-family: Tajawal, sans-serif;
-            font-size: 12px;
+            font-size: 13px;
             direction: rtl;
         }
 
@@ -171,10 +171,10 @@
     <thead>
         <tr>
             <th>المشروع</th>
-            <th> القطعة</th>
-            <th>المساحة</th>
-            <th>الطريق</th>
-            <th>الواجهة</th>
+            <th> قطعة</th>
+            <th>مساحة</th>
+            <th>طريق</th>
+            <th>واجهة</th>
             <th>الثمن</th>
             <th>المدفوع</th>
             <th>المتبقي</th>
@@ -205,17 +205,17 @@
         </td>
 
         <!-- الثمن -->
-        <td style="font-weight:bold;">
+        <td style="font-weight:bold;font-size: 14px;">
             {{ number_format($lands->sum('total_price'),2,',','.') }}
         </td>
 
         <!-- المدفوع -->
-        <td style="font-weight:bold;">
+        <td style="font-weight:bold;font-size: 14px;">
             {{ number_format($lands->sum('total_paid'),2,',','.') }}
         </td>
 
         <!-- المتبقي -->
-        <td style="font-weight:bold;">
+        <td style="font-weight:bold;font-size: 14px;">
             {{ number_format($lands->sum('remaining'),2,',','.') }}
         </td>
     </tr>
