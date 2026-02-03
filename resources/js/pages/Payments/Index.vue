@@ -7,7 +7,7 @@ import { ref } from 'vue'
 
 /* ===================== PROPS ===================== */
 const props = defineProps({
-  payments: Array,
+  payments: Object, // ✅ صحيح
   projects: {
     type: Array,
     default: () => [],
@@ -17,6 +17,7 @@ const props = defineProps({
     default: () => ({}),
   },
 })
+
 
 function paymentMethodLabel(method) {
   switch (method) {
@@ -433,36 +434,25 @@ function formatMoney(value) {
   v-if="payments.links.length > 3"
   class="flex justify-center mt-10"
 >
-  <nav
-    class="flex items-center gap-2 bg-white
-           px-4 py-3 rounded-2xl shadow-md"
-  >
-    <button
+  <nav class="flex gap-2 bg-white px-4 py-3 rounded-2xl shadow-md">
+    <Link
       v-for="(link, index) in payments.links"
       :key="index"
       v-html="link.label"
-      @click="link.url && router.visit(link.url)"
-      :disabled="!link.url"
-      class="min-w-[40px] h-10 px-3
-             flex items-center justify-center
-             rounded-xl text-sm font-medium
-             transition-all duration-200"
+      :href="link.url ?? ''"
+      preserve-state
+      preserve-scroll
+      class="min-w-[40px] h-10 px-3 rounded-xl text-sm
+             flex items-center justify-center transition"
       :class="{
-        // الصفحة الحالية
-        'bg-green-600 text-white shadow-md scale-105':
-          link.active,
-
-        // أزرار قابلة للنقر
-        'text-gray-600 hover:bg-gray-100':
-          !link.active && link.url,
-
-        // أزرار معطلة
-        'text-gray-300 cursor-not-allowed':
-          !link.url
+        'bg-green-600 text-white': link.active,
+        'text-gray-600 hover:bg-gray-100': !link.active && link.url,
+        'text-gray-300 cursor-not-allowed pointer-events-none': !link.url
       }"
     />
   </nav>
 </div>
+
 
 
   </div>
