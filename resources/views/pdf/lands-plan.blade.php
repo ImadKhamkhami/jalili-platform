@@ -274,6 +274,11 @@
 
 <h2 class="title">بيان السمسرة — تجزئة {{ $project->name }}</h2>
 
+@php
+    $totalCommission = $commissions->sum('amount');
+@endphp
+
+
 <table class="summary-table">
 <thead>
 <tr>
@@ -308,6 +313,21 @@
     <td colspan="4">لا توجد سمسرات مسجلة</td>
 </tr>
 @endforelse
+
+
+{{-- ✅ سطر المجموع المستقل --}}
+@if($commissions->count())
+<tfoot>
+<tr style="background:#f3f3f3">
+    <td colspan="3" class="bolddd" style="text-align:center">
+        مجموع السمسرة
+    </td>
+    <td class="bolddd" style="color:#0a6b6b">
+        {{ number_format($totalCommission, 2, ',', '.') }}
+    </td>
+</tr>
+</tfoot>
+@endif
 </tbody>
 </table>
 
