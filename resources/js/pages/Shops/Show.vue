@@ -23,6 +23,11 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+      // ✅ مهم جدًا
+    commission_total: {
+        type: Number,
+        default: 0,
+    },
 })
 
 
@@ -206,6 +211,14 @@ function openPdf() {
         - {{ formatMoney(shop.discount) }}
       </p>
     </div>
+
+    <div v-if="commission_total > 0">
+  <p class="text-gray-500 font-bold">السمسرة</p>
+  <p class="font-semibold text-blue-600">
+    {{ formatMoney(commission_total) }}
+  </p>
+</div>
+
 
   </div>
 
@@ -426,7 +439,17 @@ function openPdf() {
 
 
 <!-- ================== الأزرار ================== -->
-<div class="flex flex-wrap justify-center gap-8 mt-10 print:hidden">
+    <div
+  class="
+    grid grid-cols-3
+    sm:grid-cols-2
+    lg:grid-cols-3
+    gap-8
+    justify-items-center
+    mt-10
+    print:hidden
+  "
+>
 
                 <!-- تعديل -->
                 <a
@@ -530,6 +553,34 @@ function openPdf() {
         تسجيل تنازل
     </span>
                 </a>
+                      <!-- إضافة سمسرة -->
+<a
+  :href="`/commissions/create/shop/${shop.id}`"
+  class="flex flex-col items-center gap-2 group"
+>
+  <div
+    class="w-14 h-14 flex items-center justify-center
+           rounded-full border border-black-500
+           text-yellow-700
+           shadow-sm transition group-hover:scale-105"
+  >
+    <!-- أيقونة السمسرة (Handshake) -->
+    <svg xmlns="http://www.w3.org/2000/svg"
+         class="w-6 h-6"
+         fill="none"
+         viewBox="0 0 24 24"
+         stroke="currentColor">
+      <path stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 11l4 4 4-4M12 15V3m9 9a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+  </div>
+
+  <span class="text-sm font-semibold text-gray-700">
+    إضافة سمسرة
+  </span>
+</a>
 
 </div>
 

@@ -173,6 +173,7 @@ public function show(Apartment $apartment)
 {
     $apartment->load([
         'building.project',
+        'commissions', // ✅ تحميل السمسرة
         'transfers.fromCustomer:id,name',
         'transfers.toCustomer:id,name',
     ]);
@@ -186,10 +187,13 @@ public function show(Apartment $apartment)
     $paid  = $payments->sum('amount');
     $total = $apartment->total_price;
 
-    /* ================= سجل الملكية الصحيح ================= */
+    /* ================= مجموع السمسرة ================= */
+    $commissionTotal = $apartment->commissions->sum('amount');
+
+    /* ================= سجل الملكية ================= */
     $ownershipHistory = collect();
 
-    // 1️⃣ المالك الأصلي = من أول تنازل
+    // 1️⃣ المالك الأصلي
     $firstTransfer = $apartment->transfers
         ->sortBy('transfer_number')
         ->first();
@@ -213,13 +217,10 @@ public function show(Apartment $apartment)
         }
     }
 
-    // 3️⃣ إزالة التكرار (احتياط)
+    // 3️⃣ إزالة التكرار
     $ownershipHistory = $ownershipHistory
         ->unique('name')
-        ->values();
-
-    // 4️⃣ عكس الترتيب → المالك الحالي في الأعلى
-    $ownershipHistory = $ownershipHistory
+        ->values()
         ->reverse()
         ->values();
 
@@ -251,8 +252,10 @@ public function show(Apartment $apartment)
             ];
         }),
 
-        /* ✅ هذا هو المهم */
         'ownership_history' => $ownershipHistory,
+
+        // ✅ السطر الحاسم
+        'commission_total' => $commissionTotal,
     ]);
 }
 

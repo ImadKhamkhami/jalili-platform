@@ -411,13 +411,12 @@ public function update(Request $request, Shop $shop)
     ===================================================== */
 public function show(Shop $shop)
 {
-    // تحميل العلاقات
     $shop->load([
-    'building.project',
-    'transfers.fromCustomer:id,name',
-    'transfers.toCustomer:id,name',
+        'building.project',
+        'commissions', // ✅ تحميل السمسرة
+        'transfers.fromCustomer:id,name',
+        'transfers.toCustomer:id,name',
     ]);
-
 
     /* ================= الدفوعات ================= */
     $payments = Payment::where('context', 'shop')
@@ -425,39 +424,39 @@ public function show(Shop $shop)
         ->orderBy('paid_at')
         ->get();
 
-    $paid = $payments->sum('amount');
+    $paid  = $payments->sum('amount');
+    $total = $shop->total_price;
 
-   /* ================= سجل الملكية الصحيح ================= */
-   $ownershipHistory = collect();
+    /* ================= مجموع السمسرة ================= */
+    $commissionTotal = $shop->commissions->sum('amount');
 
-   // 1️⃣ المالك الأصلي = من أول تنازل
-   $firstTransfer = $shop->transfers->sortBy('transfer_number')->first();
+    /* ================= سجل الملكية ================= */
+    $ownershipHistory = collect();
 
-   if ($firstTransfer && $firstTransfer->fromCustomer) {
-    $ownershipHistory->push([
-        'name' => $firstTransfer->fromCustomer->name,
-        'transfer_number' => '-',
-        'date' => '-',
-    ]);
-   }
-
-   // 2️⃣ الملاك بعد التنازلات
-   foreach ($shop->transfers->sortBy('transfer_number') as $t) {
-    if ($t->toCustomer) {
+    $firstTransfer = $shop->transfers->sortBy('transfer_number')->first();
+    if ($firstTransfer && $firstTransfer->fromCustomer) {
         $ownershipHistory->push([
-            'name' => $t->toCustomer->name,
-            'transfer_number' => $t->transfer_number,
-            'date' => $t->transfer_date,
+            'name' => $firstTransfer->fromCustomer->name,
+            'transfer_number' => '-',
+            'date' => '-',
         ]);
     }
-   }
 
-  // 3️⃣ إزالة التكرار (احتياط)
-   $ownershipHistory = $ownershipHistory->unique('name')->values();
+    foreach ($shop->transfers->sortBy('transfer_number') as $t) {
+        if ($t->toCustomer) {
+            $ownershipHistory->push([
+                'name' => $t->toCustomer->name,
+                'transfer_number' => $t->transfer_number,
+                'date' => $t->transfer_date,
+            ]);
+        }
+    }
 
-   // 4️⃣ عكس الترتيب → المالك الحالي في الأعلى
-      $ownershipHistory = $ownershipHistory->reverse()->values();
-
+    $ownershipHistory = $ownershipHistory
+        ->unique('name')
+        ->values()
+        ->reverse()
+        ->values();
 
     return Inertia::render('Shops/Show', [
         'shop' => $shop,
@@ -469,30 +468,31 @@ public function show(Shop $shop)
 
         'building_number' => $shop->building->name,
 
-        /* ================= الملخص المالي ================= */
         'summary' => [
-            'total'     => $shop->total_price,
+            'total'     => $total,
             'paid'      => $paid,
-            'remaining' => max($shop->total_price - $paid, 0),
+            'remaining' => max($total - $paid, 0),
         ],
 
-        /* ================= الدفوعات ================= */
-        'payments' => $payments->map(function ($p) use ($shop) {
+        'payments' => $payments->map(function ($p) use ($total) {
             return [
                 'id'         => $p->id,
                 'amount'     => $p->amount,
                 'paid_at'    => $p->paid_at?->format('Y-m-d'),
                 'method'     => $p->payment_method,
-                'percentage' => $shop->total_price > 0
-                    ? round(($p->amount / $shop->total_price) * 100, 1)
+                'percentage' => $total > 0
+                    ? round(($p->amount / $total) * 100, 1)
                     : 0,
             ];
         }),
 
-        /* ================= سجل التنازلات (جاهز للعرض) ================= */
         'ownership_history' => $ownershipHistory,
+
+        // ✅ السطر الحاسم
+        'commission_total' => $commissionTotal,
     ]);
 }
+
 
     /* =====================================================
        DELETE

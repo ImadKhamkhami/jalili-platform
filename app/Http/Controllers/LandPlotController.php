@@ -55,9 +55,6 @@ public function invoicePrint(LandPlot $land)
     /* -------------------------------------------------------
         طباعة المخطط
     ------------------------------------------------------- */
-
-
-
 public function printPlan(Project $project)
 {
     $lands = LandPlot::where('project_id', $project->id)
@@ -137,13 +134,6 @@ public function printPlan(Project $project)
     ]);
 }
 
-
-
-
-
-
-
-
 private function getLandsWithPayments(Project $project)
 {
     return LandPlot::where('project_id', $project->id)
@@ -168,7 +158,6 @@ private function getLandsWithPayments(Project $project)
         });
 }
 
-
     /* -------------------------------------------------------
         INDEX – عرض كل القطع
     ------------------------------------------------------- */
@@ -191,10 +180,6 @@ public function index()
         'lands'           => $lands,
     ]);
 }
-
-
-
-
     /* -------------------------------------------------------
         BY PROJECT – عرض القطع حسب المشروع (مثل الشقق)
         /projects/{project}/lands
@@ -341,13 +326,14 @@ public function byProject(Project $project)
 }
 
     /* -------------------------------------------------------
-        SHOW (اختياري – نوسّعه لاحقًا)
+        SHOW 
     ------------------------------------------------------- */
 public function show(LandPlot $land)
 {
     // تحميل العلاقات
     $land->load([
         'project',
+        'commissions', // ✅ أضف هذا السطر
         'transfers.fromCustomer:id,name',
         'transfers.toCustomer:id,name',
     ]);

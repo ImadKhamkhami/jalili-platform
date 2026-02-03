@@ -149,6 +149,20 @@ function remove() {
             - {{ formatMoney(land.discount) }}
           </p>
         </div>
+                      <!-- ===== السمسرة ===== -->
+<div v-if="land.commissions && land.commissions.length">
+  <p class="text-gray-500 font-bold"> السمسرة</p>
+  <p class="font-semibold text-blue-600">
+    {{
+      formatMoney(
+        land.commissions.reduce(
+          (sum, c) => sum + Number(c.amount),
+          0
+        )
+      )
+    }}
+  </p>
+</div>
 
       </div>
 

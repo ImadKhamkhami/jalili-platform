@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Commission;
 use App\Models\Project;
 use App\Models\LandPlot;
+use App\Models\Apartment;
+use App\Models\Shop;
 use Inertia\Inertia;
 
 use Illuminate\Http\Request;
@@ -108,12 +110,28 @@ public function store(Request $request)
 
 public function create(string $context, int $unit)
 {
+    $unitModel = null;
+    $project   = null;
+
     if ($context === 'land') {
         $unitModel = LandPlot::with('project')->findOrFail($unit);
-        $project = $unitModel->project;
-
+        $project   = $unitModel->project;
         $unitModel->label = 'قطعة رقم ' . $unitModel->land_number;
     }
+
+    elseif ($context === 'apartment') {
+        $unitModel = Apartment::with('building.project')->findOrFail($unit);
+        $project   = $unitModel->building->project;
+        $unitModel->label = 'شقة رقم ' . $unitModel->number;
+    }
+
+    elseif ($context === 'shop') {
+        $unitModel = Shop::with('building.project')->findOrFail($unit);
+        $project   = $unitModel->building->project;
+        $unitModel->label = 'محل رقم ' . $unitModel->number;
+    }
+
+    abort_if(!$unitModel, 404);
 
     return inertia('Commissions/Create', [
         'context' => $context,
@@ -122,20 +140,29 @@ public function create(string $context, int $unit)
     ]);
 }
 
+
 public function edit(Commission $commission)
 {
     $unit = null;
     $label = null;
+    $project = null;
 
     if ($commission->context === 'land') {
         $unit = $commission->land;
         $label = 'قطعة رقم ' . $unit->land_number;
-    } elseif ($commission->context === 'apartment') {
+        $project = $unit->project;
+    }
+
+    elseif ($commission->context === 'apartment') {
         $unit = $commission->apartment;
         $label = 'شقة رقم ' . $unit->number;
-    } elseif ($commission->context === 'shop') {
+        $project = $unit->building->project;
+    }
+
+    elseif ($commission->context === 'shop') {
         $unit = $commission->shop;
         $label = 'محل رقم ' . $unit->number;
+        $project = $unit->building->project;
     }
 
     return inertia('Commissions/Edit', [
@@ -143,9 +170,10 @@ public function edit(Commission $commission)
         'context'    => $commission->context,
         'unit'       => $unit,
         'unitLabel'  => $label,
-        'project'    => $commission->project,
+        'project'    => $project,
     ]);
 }
+
 
 public function print(Commission $commission)
 {
