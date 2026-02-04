@@ -32,6 +32,11 @@
             border-color: #f9a825;
         }
 
+        .land-reserved {
+    background-color: #c7c3c3;
+    border-color: #bdbdbd;
+}
+
         .current-owner {
             color: #000;
             font-weight: bold;
@@ -171,13 +176,12 @@
     $facadeLabel = $land->view_type === '2-FACADE' ? '2F' : '1F';
 @endphp
 
-<td class="{{ $land->status === 'مباعة' ? 'land-sold' : '' }}">
+<td class="
+    {{ $land->status === 'مباعة' ? 'land-sold' : '' }}
+    {{ $land->status === 'محجوزة' ? 'land-reserved' : '' }}
+">
     <div class="land-title">
-        @if($land->status === 'محجوزة')
-            <span class="reserved-underline">قطعة {{ $land->land_number }}</span>
-        @else
-            قطعة {{ $land->land_number }}
-        @endif
+        قطعة {{ $land->land_number }}
     </div>
 
     <div class="info">
@@ -278,13 +282,12 @@
     $totalCommission = $commissions->sum('amount');
 @endphp
 
-
 <table class="summary-table">
 <thead>
 <tr>
-    <th> القطعة</th>
-    <th>المبلغ </th>
-    <th>التاريخ </th>
+    <th>القطعة</th>
+    <th>المبلغ</th>
+    <th>التاريخ</th>
     <th>اسم السمسار</th>
 </tr>
 </thead>
@@ -293,7 +296,7 @@
 @forelse($commissions as $c)
 <tr>
     <td class="bolddd">
-         {{ optional($c->land)->land_number }}
+        {{ optional($c->land)->land_number }}
     </td>
 
     <td class="bolddd">
@@ -314,11 +317,9 @@
 </tr>
 @endforelse
 
-
-{{-- ✅ سطر المجموع المستقل --}}
+{{-- ✅ سطر المجموع (مرة واحدة فقط) --}}
 @if($commissions->count())
-<tfoot>
-<tr style="background:#f3f3f3">
+<tr style="background:#f3f3f3; page-break-inside: avoid;">
     <td colspan="3" class="bolddd" style="text-align:center">
         مجموع السمسرة
     </td>
@@ -326,10 +327,11 @@
         {{ number_format($totalCommission, 2, ',', '.') }}
     </td>
 </tr>
-</tfoot>
 @endif
+
 </tbody>
 </table>
+
 
 
 <script>
