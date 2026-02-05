@@ -26,7 +26,10 @@
     color: #0b0c0c;
     font-weight: bold;
 }
-
+.boooold{
+font-size: 15px;
+font-weight: bold;
+}
 
 
         .discount {
@@ -128,13 +131,13 @@
 
 <!-- ===== HEADER ===== -->
 <div class="header">
-    <h1>
+    <h2>
         @if($hasLandsOnly)
             بيان دفوعات تجزئة {{ $project->name }}
         @else
             بيان دفوعات إقامة {{ $project->name }}
         @endif
-    </h1>
+    </h2>
 </div>
 
 @php
@@ -315,7 +318,7 @@
 <table class="total-project">
     <tr>
         <th>مجموع  دفوعات  {{ $project->name }}</th>
-        <th>{{ number_format($projectPaid,2,',','.') }}</th>
+        <th class="boooold">{{ number_format($projectPaid,2,',','.') }}</th>
     </tr>
 </table>
 
