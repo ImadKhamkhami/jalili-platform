@@ -213,9 +213,14 @@
 <h2 class="title">تجزئة {{ $project->name }} — توزيع القطع حسب الزبناء</h2>
 
 @php
-    $grouped = $lands->filter(fn($l) => !empty($l->customer_name))
-        ->groupBy('customer_name')
-        ->sortByDesc(fn($items) => $items->count());
+   $grouped = $lands
+    ->filter(fn($l) =>
+        !empty($l->customer_name) &&
+        $l->status !== 'محجوزة'
+    )
+    ->groupBy('customer_name')
+    ->sortByDesc(fn($items) => $items->count());
+
 @endphp
 
 <table class="summary-table">

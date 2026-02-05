@@ -16,6 +16,19 @@
             direction: rtl;
         }
 
+        .note-box {
+    margin-top: 12px;
+    padding: 8px 10px;
+    text-align: right;
+    background: #f9f9f9;
+    font-size: 13px;
+    color: #050505;
+}
+.note-label {
+    font-weight: bold;
+    color: #050505;
+}
+
         .receipt-title {
             font-size: 20px;
             font-weight: bold;
@@ -140,6 +153,18 @@ function unitDescription($commission) {
                 {{ \Carbon\Carbon::parse($commission->commission_date)->format('Y-m-d') }}
             </td>
         </tr>
+
+        @if(!empty($commission->notes))
+<tr>
+    <td colspan="4">
+        <div class="note-box">
+            <span class="note-label">البيان :</span>
+            {{ $commission->notes }}
+        </div>
+    </td>
+</tr>
+@endif
+
     </table>
 
     <table class="signatures">
@@ -190,6 +215,17 @@ function unitDescription($commission) {
                 {{ \Carbon\Carbon::parse($commission->commission_date)->format('Y-m-d') }}
             </td>
         </tr>
+
+        @if(!empty($commission->notes))
+<tr>
+    <td colspan="4">
+        <div class="note-box">
+            <span class="note-label">البيان:</span>
+            {{ $commission->notes }}
+        </div>
+    </td>
+</tr>
+@endif
     </table>
 
     <table class="signatures">
