@@ -4,6 +4,9 @@ import { ref, onMounted, computed } from "vue";
 import { router } from "@inertiajs/vue3";
 
 
+function isReserved(land) {
+  return land.status === 'محجوزة'
+}
 
 
 function printLandPlan(projectId) {
@@ -160,14 +163,18 @@ onMounted(() => {
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
 
         <!-- ================= CARD ================= -->
-        <div
-                v-for="land in lands"
-                :key="land.id"
-                :id="`land-${land.id}`"
-                @click="router.visit(`/lands/${land.id}`)"
-               class="relative bg-white border shadow rounded-xl pt-1 px-6 pb-5 text-center
-               hover:bg-green-50 hover:shadow-md hover:scale-[1.02]
-               transition cursor-pointer text-sm" >
+<div
+  v-for="land in lands"
+  :key="land.id"
+  :id="`land-${land.id}`"
+  @click="router.visit(`/lands/${land.id}`)"
+  :class="[
+    'relative border shadow rounded-xl pt-1 px-6 pb-5 text-center transition cursor-pointer text-sm',
+    isReserved(land)
+      ? 'bg-gray-200 text-gray-500 hover:bg-gray-200'
+      : 'bg-white hover:bg-green-50 hover:shadow-md hover:scale-[1.02]'
+  ]"
+>
 
                 <!-- 🟢🟡🔴 شارة الحالة (مطابقة للشقق) -->
                 <div
@@ -230,12 +237,12 @@ onMounted(() => {
     class="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden"
     style="direction:ltr"
   >
-    <div
-      class="h-full  rounded-full transition-all duration-500 ease-out"
-      :style="{
-        width: land.payment_percentage + '%',
-        backgroundColor: '#16a34a'
-      }"
+<div
+  class="h-full rounded-full transition-all duration-500 ease-out"
+  :style="{
+    width: land.payment_percentage + '%',
+    backgroundColor: isReserved(land) ? '#9ca3af' : '#16a34a'
+  }"
     ></div>
   </div>
 
