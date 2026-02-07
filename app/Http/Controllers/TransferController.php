@@ -253,6 +253,7 @@ public function store(Request $request)
             'unit_id'          => $data['unit_id'],
             'from_customer_id' => $data['from_customer_id'],
             'to_customer_id'   => $toCustomer->id,
+            'to_national_id'   => $data['to_national_id'],// خزن رقم البطاقة مباشرة في التنازل
             'transfer_number'  => ($transferNumber ?? 0) + 1,
             'transfer_date'    => $data['transfer_date'],
             'notes'            => $data['notes'],
@@ -260,7 +261,7 @@ public function store(Request $request)
 
         // ✅ تحديث المالك الحالي فقط
         $unit->update([
-            'customer_ref_id' => $toCustomer->id,
+            'customer_id' => $data['to_national_id'],
             'customer_name'   => $toCustomer->name,
             'customer_phone'  => $toCustomer->phone,
         ]);
