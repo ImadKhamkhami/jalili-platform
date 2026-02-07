@@ -262,6 +262,7 @@ public function store(Request $request)
         // ✅ تحديث المالك الحالي فقط
         $unit->update([
             'customer_id' => $data['to_national_id'],
+            'customer_ref_id' => $toCustomer->id,
             'customer_name'   => $toCustomer->name,
             'customer_phone'  => $toCustomer->phone,
         ]);
