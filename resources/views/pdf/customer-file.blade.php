@@ -175,7 +175,8 @@
             <th>مساحة</th>
             <th>طريق</th>
             <th>واجهة</th>
-            <th>الثمن</th>
+            <th>الثمن الاجمالي</th>
+             <th>50%  </th>
             <th>المدفوع</th>
             <th>المتبقي</th>
             <th>نسبة الاداء</th>
@@ -190,6 +191,7 @@
             <td>{{ $u['road_type'] }} م</td>
             <td>{{ $u['view_type'] }}</td>
             <td>{{ number_format($u['total_price'],2,',','.') }}</td>
+            <td>{{ number_format($u['total_price'] * 0.5,2,',','.') }}</td>
             <td>{{ number_format($u['total_paid'],2,',','.') }}</td>
             <td>{{ number_format($u['remaining'],2,',','.') }}</td>
             <td>{{ $u['payment_percent'] > 0 ? $u['payment_percent'].' %' : '-' }}</td>
@@ -197,29 +199,35 @@
         </tr>
         @endforeach
     </tbody>
-  <tfoot>
-    <tr>
-        <!-- الأعمدة الوصفية -->
-        <td colspan="5" style="text-align:center; font-weight:bold;">
-            الإجمالي
-        </td>
+<tr>
+    <!-- الأعمدة الوصفية (5 أعمدة) -->
+    <td colspan="5" style="text-align:center; font-weight:bold;">
+        الإجمالي
+    </td>
 
-        <!-- الثمن -->
-        <td style="font-weight:bold;font-size: 14px;">
-            {{ number_format($lands->sum('total_price'),2,',','.') }}
-        </td>
+    <!-- الثمن الاجمالي -->
+    <td style="font-weight:bold;">
+        {{ number_format($lands->sum('total_price'),2,',','.') }}
+    </td>
 
-        <!-- المدفوع -->
-        <td style="font-weight:bold;font-size: 14px;">
-            {{ number_format($lands->sum('total_paid'),2,',','.') }}
-        </td>
+    <!-- مجموع 50% -->
+    <td style="font-weight:bold;">
+        {{ number_format($lands->sum('total_price') * 0.5,2,',','.') }}
+    </td>
 
-        <!-- المتبقي -->
-        <td style="font-weight:bold;font-size: 14px;">
-            {{ number_format($lands->sum('remaining'),2,',','.') }}
-        </td>
-    </tr>
-    </tfoot>
+    <!-- مجموع المدفوع -->
+    <td style="font-weight:bold;">
+        {{ number_format($lands->sum('total_paid'),2,',','.') }}
+    </td>
+
+    <!-- مجموع المتبقي -->
+    <td style="font-weight:bold;">
+        {{ number_format($lands->sum('remaining'),2,',','.') }}
+    </td>
+
+    <!-- نسبة الأداء (لا تحتاج إجمالي) -->
+    <td>-</td>
+</tr>
 </table>
 @endif
 
