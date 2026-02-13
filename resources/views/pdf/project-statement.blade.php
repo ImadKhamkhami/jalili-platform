@@ -296,7 +296,7 @@ font-weight: bold;
                     </td>
 <td class="font-bold {{ ($row['paid'] > 0 && $row['remaining'] == 0) ? 'solded' : '' }}">
     @if($row['paid'] > 0 && $row['remaining'] == 0)
-        soldé
+    خالص
     @elseif($row['paid'] > 0)
         {{ number_format($row['remaining'],2,',','.') }}
     @else
