@@ -194,7 +194,7 @@
             <td>{{ number_format($u['total_price'] * 0.5,2,',','.') }}</td>
             <td>{{ number_format($u['total_paid'],2,',','.') }}</td>
             <td>{{ number_format($u['remaining'],2,',','.') }}</td>
-            <td>{{ $u['payment_percent'] > 0 ? $u['payment_percent'].' %' : '-' }}</td>
+            <td>{{ $u['payment_percent'] > 0 ? round($u['payment_percent']).' %' : '-' }}</td>
 
         </tr>
         @endforeach

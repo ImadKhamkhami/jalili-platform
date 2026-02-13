@@ -283,13 +283,13 @@ font-weight: bold;
                          <br>
                         @empty — @endforelse
                     </td>
-                    <td>
-                      @if(($row['payment_percent'] ?? 0) > 0)
-                      {{ $row['payment_percent'] }} %
-                      @else
-                       -
-                      @endif
-                    </td>
+      <td>
+  @if(($row['payment_percent'] ?? 0) > 0)
+      {{ round($row['payment_percent']) }} %
+  @else
+      -
+  @endif
+</td>
 
                      <td class="font-bold">
                        {{ $row['paid'] > 0 ? number_format($row['paid'],2,',','.') : '-' }}
